@@ -55,6 +55,9 @@ body {
     height: auto;
 }
 
+.logo-mascote, .logo-texto {
+    height: auto;
+}
 /* --- Resto do Estilo --- */
 .description {
     color: var(--text-muted);
@@ -113,5 +116,36 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* 3. Media Query: Regras específicas para telas pequenas (Celulares) */
+@media (max-width: 600px) {
+    .welcome-card {
+        padding: 30px 20px; /* Diminui o respiro interno no celular */
+        width: 90%; /* Garante que o quadrado não cole nas bordas da tela */
+    }
+
+    .complete-logo-wrapper {
+        flex-direction: column; /* No celular, coloca o mascote em cima do texto */
+        gap: 10px;
+    }
+
+    .logo-mascote {
+        max-width: 80px; /* Reduz um pouco o mascote no celular */
+    }
+
+    .logo-texto {
+        max-width: 220px; /* Reduz o texto para caber na tela do celular */
+    }
+
+    .action-buttons {
+        flex-direction: column; /* Botões um em cima do outro no celular */
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%; /* Botões ocupam a largura toda do card no celular */
+        box-sizing: border-box;
     }
 }
