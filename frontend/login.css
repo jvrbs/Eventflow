@@ -134,7 +134,7 @@ body {
 .return-icon {
     width: 18px; 
     height: auto;
-    filter: sepia(100%) hue-rotate(240deg) saturate(300%) brightness(50%); */
+    filter: sepia(100%) hue-rotate(240deg) saturate(300%) brightness(50%);
 }
 
 /* --- Efeito de Hover (Ao passar o mouse) --- */
@@ -144,10 +144,6 @@ body {
     transform: translateX(-5px); /* Move levemente para a esquerda */
 }
 
-/* Se sua imagem tiver filter no hover, você pode resetar aqui: */
-.return-link:hover .return-icon {
-    /* filter: brightness(0) invert(1); Se quiser que a imagem fique branca no hover */
-}
 
 /* --- Ajuste para Celular --- */
 @media (max-width: 480px) {
