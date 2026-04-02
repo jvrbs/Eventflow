@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventFlow - Sua jornada para eventos</title>     
+    <title>EventFlow - Sua jornada para eventos</title>    
 
     <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
     <link rel="stylesheet" href="home.css">
 </head>
 <body>
-    <header class="header-eventflow">
+
+    <header class="header-eventflow" id="headerPill">
         <div class="logo-area">
             <img src="../img/Logo texto solo.png" alt="Logo EventFlow" class="img-logo">
         </div>
+
+        <nav class="menu-horizontal-links" id="menuLinks">
+            <a href="#">Conta</a>
+            <a href="#">Ingressos</a>
+            <a href="#">Sair</a>
+        </nav>
 
         <button class="menu-hamburguer" id="btnMenu">
             <span class="barrinha"></span>
@@ -20,5 +27,84 @@
             <span class="barrinha"></span>
         </button>
     </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <main class="home-content">
+        <section class="hero-section">
+            <div class="hero-text">
+                <h1>O FLUXO DOS <span class="destaque">MELHORES</span> EVENTOS</h1>
+                <p>Descubra experiências únicas e garanta seu lugar nos eventos mais exclusivos.</p>
+                <button class="btn-explorar">Explorar Agora</button>
+            </div>
+        </section>
+
+        <section class="events-container">
+            <div class="section-header">
+                <h2 class="titulo-sessao">Próximos Eventos</h2>
+                
+                <div class="search-filter-group">
+                    <input type="text" placeholder="Buscar evento..." class="input-busca-inline">
+                    
+                    <div class="filters-inline">
+                        <button class="filter-btn active">Tudo</button>
+                        <button class="filter-btn">Música</button>
+                        <button class="filter-btn">Teatro</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="events-grid">
+                
+                <article class="event-card">
+                    <div class="card-thumb" style="background-image: url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=500');">
+                        <span class="tag">Música</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="event-date">25 OUT • 21:00</p>
+                        <h3>Festival de Verão Flow</h3>
+                        <p class="event-local">Arena Curitiba, PR</p>
+                        <div class="card-footer">
+                            <span class="price">R$ 50,00</span>
+                            <button class="btn-ticket">Ingressos</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="event-card">
+                    <div class="card-thumb" style="background-image: url('https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?q=80&w=500');">
+                        <span class="tag">Jazz</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="event-date">28 OUT • 20:30</p>
+                        <h3>Noite de Jazz no Centro</h3>
+                        <p class="event-local">Teatro Guaíra, Curitiba</p>
+                        <div class="card-footer">
+                            <span class="price">R$ 35,00</span>
+                            <button class="btn-ticket">Ingressos</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="event-card">
+                    <div class="card-thumb" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=500');">
+                        <span class="tag">Festas</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="event-date">01 NOV • 23:00</p>
+                        <h3>Halloween Flow Party</h3>
+                        <p class="event-local">Club On, Batel</p>
+                        <div class="card-footer">
+                            <span class="price">R$ 60,00</span>
+                            <button class="btn-ticket">Ingressos</button>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <script src="home.js"></script>
 </body>
 </html>
