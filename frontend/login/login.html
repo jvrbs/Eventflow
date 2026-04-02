@@ -29,9 +29,10 @@
                     </p>
                 </div>
 
-                <form action="#" method="post" class="login-form">
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Senha" required>
+                <form action="#" method="post" class="login-form" id="formLogin">
+                    <input type="email" name="email" placeholder="Email" id="emailLogin" required>
+                    <input type="password" name="password" placeholder="Senha"  id="passwordLogin" required>
+                    <p id="mensagem3" style="color: red; display: none;">Insira os campos: Senha ou E-mail</p>
                     <button type="submit" class="btn-login">Entrar</button>
                 </form>
             </div>
