@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informações Pessoais - EventFlow</title>
+    
+    <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
+    <link rel="stylesheet" href="info-pessoais.css">
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <header class="header-eventflow" id="headerPill">
+        <div class="logo-area">
+            <img src="../img/Logo texto solo.png" alt="Logo EventFlow" class="img-logo">
+        </div>
+
+        <nav class="menu-horizontal-links">
+            <a href="home.html">Início</a>
+            <a href="conta.html">Minha Conta</a>
+            <a href="../login/login.html" class="sair">Sair</a>
+        </nav>
+
+        <button class="menu-hamburguer" id="btnMenu">
+            <span class="barrinha"></span>
+            <span class="barrinha"></span>
+            <span class="barrinha"></span>
+        </button>
+    </header>
+
+    <main class="info-pessoais-wrapper">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Suas Informações</h2>
+                <p>Mantenha seus dados atualizados.</p>
+            </div>
+
+            <form id="formInfo" class="form-info">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="nome" value="Pedro Silva">
+                </div>
+
+                <div class="form-group">
+                    <label>Data de Nascimento</label>
+                    <input type="date" id="dataNascimento" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Idade (preenchida automaticamente)</label>
+                    <input type="number" id="idade" value="16" readonly>
+                </div>
+
+                <div id="mensagemValidacao" class="mensagem-validacao"></div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                    <a href="conta.html" class="btn-voltar">Voltar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="home.js"></script>
+    <script src="validacao-info.js"></script>
+</body>
+</html>
