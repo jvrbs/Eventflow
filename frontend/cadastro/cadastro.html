@@ -30,12 +30,15 @@
                 </div>
 
                 <form action="#" method="post" class="cadastro-form" id="formCadastro">
-                    <input type="email" name="email" id="emailCadastro"placeholder="Email" required>
+                    <input type="text" name="nome_completo" id="nomeCompletocadastro" placeholder="Nome Completo" required>
+                    <input type="date" name="data_nascimento" id="dataNascimentoCadastro" required>
+                    <input type="email" name="email" id="emailCadastro" placeholder="Email" required>
                     <input type="password" name="password" id="passwordCadastro" placeholder="Senha" required>
                     <input type="password" name="confirm_password" id="confirmarSenhaCadastro" placeholder="Confirmar Senha" required>
                     <p id="mensagem" style="color: red; display: none;">As senhas não coincidem</p>
-                    <p id="mensagem2" style=" color: red; display: none;">A senha deve ter pelo menos 8 caracteres.</p>
-                    <p id="mensagem3" style=" color: blue; display: none;">Cadastro realizado com sucesso</p>
+                    <p id="mensagem2" style="color: red; display: none;">A senha deve ter pelo menos 8 caracteres.</p>
+                    <p id="mensagem3" style="color: red; display: none;">Por favor, preencha todos os campos.</p>
+                    <p id="mensagem4" style="color: blue; display: none;">Cadastro realizado com sucesso</p>
                     
                     <button type="submit" class="btn-login">Cadastrar</button>
                 </form>

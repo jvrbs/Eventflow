@@ -1,0 +1,59 @@
+# database.py
+import mysql.connector
+import os
+from dotenv import load_dotenv
+import bcrypt
+
+load_dotenv()
+
+def get_connection():
+    return mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )
+
+def procura_usuario_por_email(email):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        query = "SELECT * FROM usuario WHERE email = %s"
+        cursor.execute(query, (email,))
+
+        usuario = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        return usuario
+    except mysql.connector.Error as err:
+        print(f"Erro ao procurar usuário: {err}")
+        return None
+
+def cadastra_usuario(nome_completo, data_nascimento, email, senha_cripto):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        query = """INSERT INTO usuario 
+                   (nome_completo, data_nascimento, email, senha_hash, perfil) 
+                   VALUES (%s, %s, %s, %s, %s)"""
+        cursor.execute(query, (nome_completo, data_nascimento, email, senha_cripto, 'participante'))
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        print(f"Erro ao cadastrar usuário: {err}")
+        raise
+
+    
+def verifica_senha_usuario(senha, senha_hash):
+    """Verifica se a senha fornecida bate com o hash armazenado"""
+    try:
+        return bcrypt.checkpw(senha.encode('utf-8'), senha_hash)
+    except Exception as err:
+        print(f"Erro ao verificar senha: {err}")
+        return False
+
+
