@@ -36,9 +36,7 @@ def cadastra_usuario(nome_completo, data_nascimento, email, senha_cripto):
     try:
         conn = get_connection()
         cursor = conn.cursor()
-        query = """INSERT INTO usuario 
-                   (nome_completo, data_nascimento, email, senha_hash, perfil) 
-                   VALUES (%s, %s, %s, %s, %s)"""
+        query = "INSERT INTO usuario (nome, data_nascimento, email, senha_hash, perfil) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(query, (nome_completo, data_nascimento, email, senha_cripto, 'participante'))
         conn.commit()
         cursor.close()
@@ -48,10 +46,13 @@ def cadastra_usuario(nome_completo, data_nascimento, email, senha_cripto):
         raise
 
     
+
 def verifica_senha_usuario(senha, senha_hash):
-    """Verifica se a senha fornecida bate com o hash armazenado"""
     try:
-        return bcrypt.checkpw(senha.encode('utf-8'), senha_hash)
+        return bcrypt.checkpw(
+            senha.encode('utf-8'),
+            senha_hash.encode('utf-8')  # ← adiciona isso
+        )
     except Exception as err:
         print(f"Erro ao verificar senha: {err}")
         return False
