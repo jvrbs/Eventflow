@@ -50,8 +50,9 @@ def login(dados: UsuarioLogin):
             "mensagem": "Login realizado com sucesso!",
             "usuario": {
                 "id": usuario['id'],
-                "nome_completo": usuario['nome'],  # ← aqui
-                "email": usuario['email']
+                "nome": usuario['nome'],
+                "email": usuario['email'],
+                "data_nascimento": usuario['data_nascimento']
             }
         }
     except Exception as e:

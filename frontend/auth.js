@@ -86,6 +86,8 @@ if (formularioLogin) {
                 mensagem3.textContent = resultado.erro;
                 mensagem3.style.display = 'block';
             } else {
+                localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
+                window.location.href = "../home/home.html"; 
                 window.location.href = "../home/home.html";
             }
         } catch (erro) {
