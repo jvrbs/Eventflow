@@ -50,7 +50,7 @@ def login(dados: UsuarioLogin):
             "mensagem": "Login realizado com sucesso!",
             "usuario": {
                 "id": usuario['id'],
-                "nome": usuario['nome'],
+                "nome_completo": usuario['nome'],
                 "email": usuario['email'],
                 "data_nascimento": usuario['data_nascimento']
             }
