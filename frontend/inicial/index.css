@@ -1,0 +1,151 @@
+:root {
+    --primary-purple: #4B0082;    /* Roxo: Confiança e Marca */
+    --secondary-orange: #FF6B00;  /* Laranja: Ação e Inscrição */
+    
+    --bg-light: #F0F2F5;         /* Fundo da página (quase branco) */
+    --text-dark: #212529;         /* Texto principal (cinza muito escuro) */
+    --text-muted: #6C757D;        /* Texto secundário/legendas */
+    --white: #FFFFFF;             /* Branco puro (cards e inputs) */
+    
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light); /* Fundo da página */
+}
+
+/* Centralização Total da Tela */
+.welcome-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* --- O QUADRADO DE FOCO (CARD) --- */
+.welcome-card {
+    background-color: var(--white); /* Fundo do quadrado */
+    padding: 50px; /* Espaço interno generoso */
+    border-radius: 15px; /* Bordas arredondadas suaves */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Sombra suave para dar profundidade */
+    text-align: center;
+    max-width: 650px; /* Largura máxima do quadrado */
+    width: 100%; /* Garante que seja responsivo */
+    animation: slideInUp 1s ease; /* Animação de entrada */
+}
+
+/* --- Estilos da Logo (Mantendo os ajustes anteriores) --- */
+.complete-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.logo-mascote {
+    max-width: 200px;
+    height: auto;
+}
+
+.logo-texto {
+    max-width: 480px;
+    height: auto;
+}
+
+.logo-mascote, .logo-texto {
+    height: auto;
+}
+/* --- Resto do Estilo --- */
+.description {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 15px 35px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.btn-login {
+    background-color: var(--primary-purple);
+    color: var(--white);
+}
+
+.btn-register {
+    background-color: var(--secondary-orange);
+    color: var(--white);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.guest-link {
+    color: var(--primary-purple);
+    text-decoration: underline;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.guest-link:hover {
+    opacity: 1;
+}
+
+/* --- Animação de Entrada do Card --- */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 3. Media Query: Regras específicas para telas pequenas (Celulares) */
+@media (max-width: 600px) {
+    .welcome-card {
+        padding: 30px 20px; /* Diminui o respiro interno no celular */
+        width: 90%; /* Garante que o quadrado não cole nas bordas da tela */
+    }
+
+    .complete-logo-wrapper {
+        flex-direction: column; /* No celular, coloca o mascote em cima do texto */
+        gap: 10px;
+    }
+
+    .logo-mascote {
+        max-width: 80px; /* Reduz um pouco o mascote no celular */
+    }
+
+    .logo-texto {
+        max-width: 220px; /* Reduz o texto para caber na tela do celular */
+    }
+
+    .action-buttons {
+        flex-direction: column; /* Botões um em cima do outro no celular */
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%; /* Botões ocupam a largura toda do card no celular */
+        box-sizing: border-box;
+    }
+}

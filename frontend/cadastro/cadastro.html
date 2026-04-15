@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - EventFlow</title>
+    <link rel="stylesheet" href="cadastro.css">
+    <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
+
+</head>
+<body>
+    <main>
+        <div class="return">
+            <a href="../inicial/index.html" class="return-link">
+                <img src="../img/seta esquerda.png" alt="Seta Voltar" class="return-icon">
+            </a>
+        </div>
+        <div class="welcome-container">
+            <div class="welcome-card">
+                <div class="complete-logo">
+                    <img src="../img/Logo eventflow.png" alt="Mascote Flow" class="logo-mascote">
+                    <img src="../img/Logo texto.png" alt="EventFlow" class="logo-texto">
+                </div>
+
+                <div class="brand-description">
+                    <p class="description">
+                        Sua jornada para eventos incríveis começa aqui. <br>
+                        Para explorar e garantir sua vaga, faça seu cadastro na nossa plataforma:
+                    </p>
+                </div>
+
+                <form action="#" method="post" class="cadastro-form" id="formCadastro">
+                    <input type="text" name="nome_completo" id="nomeCompletocadastro" placeholder="Nome Completo" required>
+                    <input type="date" name="data_nascimento" id="dataNascimentoCadastro" required>
+                    <input type="email" name="email" id="emailCadastro" placeholder="Email" required>
+                    <input type="password" name="password" id="passwordCadastro" placeholder="Senha" required>
+                    <input type="password" name="confirm_password" id="confirmarSenhaCadastro" placeholder="Confirmar Senha" required>
+                    <p id="mensagem" style="color: red; display: none;">As senhas não coincidem</p>
+                    <p id="mensagem2" style="color: red; display: none;">A senha deve ter pelo menos 8 caracteres.</p>
+                    <p id="mensagem3" style="color: red; display: none;">Por favor, preencha todos os campos.</p>
+                    <p id="mensagem4" style="color: blue; display: none;">Cadastro realizado com sucesso</p>
+                    
+                    <button type="submit" class="btn-login">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script src="../auth.js"></script>
+</body>
+</html>
