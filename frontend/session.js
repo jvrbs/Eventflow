@@ -1,5 +1,4 @@
-// Lê o usuário salvo no localStorage
-// Retorna o objeto usuário, ou redireciona para login se não encontrar
+// Get logged-in user from localStorage or redirect to login
 function getUsuarioLogado(redirectSePath = '../login/login.html') {
     const raw = localStorage.getItem('usuario');
 
@@ -11,7 +10,7 @@ function getUsuarioLogado(redirectSePath = '../login/login.html') {
     return JSON.parse(raw);
 }
 
-// Limpa a sessão e redireciona (usar no botão "Sair")
+// Clear session and redirect
 function logout(redirectPath = '../inicial/index.html') {
     localStorage.removeItem('usuario');
     window.location.href = redirectPath;

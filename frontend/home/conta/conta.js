@@ -1,4 +1,4 @@
-// conta.js
+// Display user profile initials and greeting
 document.addEventListener('DOMContentLoaded', function() {
     const usuario = getUsuarioLogado('../../login/login.html');
 
