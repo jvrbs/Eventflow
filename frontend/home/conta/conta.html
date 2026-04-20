@@ -44,8 +44,8 @@
                 <a href="#" class="btn-opcao">
                     Segurança e Senha
                 </a>
-                <a href="#" class="btn-opcao">
-                    Histórico de Compras
+                <a href="#" class="btn-opcao btn-excluir" onclick="abrirModalExcluir(event)">
+                    Excluir Minha Conta
                 </a>
                 <a href="#" onclick="logout()" class="btn-opcao logout">
                     Sair da Conta
@@ -53,6 +53,17 @@
             </nav>
         </section>
     </main>
+
+    <div id="modalExcluir" class="modal-container">
+        <div class="modal-content">
+            <h3>Excluir Conta?</h3>
+            <p>Esta ação é permanente e você perderá acesso a todos os seus ingressos no EventFlow.</p>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-confirmar-exclusao" id="btnFinalExcluir">Confirmar Exclusão</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../../session.js"></script>
     <script src="../home.js"></script>
