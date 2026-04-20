@@ -6,6 +6,7 @@
 .gitignore
 
 # Python
+_pycache_/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -83,6 +84,9 @@ logs/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+
+ehthumbs.db
+
 Thumbs.db
 Desktop.ini
 
@@ -106,3 +110,4 @@ Desktop.ini
 # Misc
 .idea/
 .vscode/
+>>>>>>> 442614a22b0cb859360d4694a74f7a98e5cda208
