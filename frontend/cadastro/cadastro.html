@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - EventFlow</title>
-
     <link rel="stylesheet" href="cadastro.css">
     <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
 </head>
@@ -20,7 +19,6 @@
 
         <div class="welcome-container">
             <div class="welcome-card">
-
                 <div class="complete-logo">
                     <img src="../img/Logo eventflow.png" alt="Mascote Flow" class="logo-mascote">
                     <img src="../img/Logo texto.png" alt="EventFlow" class="logo-texto">
@@ -32,7 +30,6 @@
                 </p>
 
                 <form class="cadastro-form" id="formCadastro">
-
                     <div class="input-group">
                         <label for="nomeCompletocadastro">Nome completo</label>
                         <input type="text" name="nome_completo" id="nomeCompletocadastro" required>
@@ -68,14 +65,15 @@
                         <input type="password" name="confirm_password" id="confirmarSenhaCadastro" required>
                     </div>
 
-                    <p id="mensagem" style="color: red; display: none;"></p>
-                    <p id="mensagem2" style="color: red; display: none;"></p>
-                    <p id="mensagem3" style="color: red; display: none;"></p>
-                    <p id="mensagem4" style="color: blue; display: none;"></p>
+                    <div class="messages-container">
+                        <p id="mensagem" style="color: red; display: none;"></p>
+                        <p id="mensagem2" style="color: red; display: none;"></p>
+                        <p id="mensagem3" style="color: red; display: none;"></p>
+                        <p id="mensagem4" style="color: blue; display: none;"></p>
+                    </div>
 
                     <button type="submit" class="btn-login">Cadastrar</button>
                 </form>
-
             </div>
         </div>
     </main>

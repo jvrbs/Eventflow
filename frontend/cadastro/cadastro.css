@@ -1,11 +1,14 @@
 :root {
     --primary-purple: #4B0082;
     --secondary-orange: #FF6B00;
-    
     --bg-light: #F0F2F5;
     --text-dark: #212529;
     --text-muted: #6C757D;
     --white: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -14,236 +17,117 @@ body {
     background-color: var(--bg-light);
 }
 
-/* =========================
-   CONTAINER
-========================= */
 .welcome-container {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
 .welcome-card {
     background-color: var(--white);
-    padding: 40px;
+    padding: 30px 40px;
     border-radius: 15px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    text-align: center;
     max-width: 650px;
     width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     animation: slideInUp 0.8s ease;
 }
 
-/* =========================
-   LOGO
-========================= */
 .complete-logo {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
-.logo-mascote {
-    max-width: 200px;
-}
+.logo-mascote { max-width: 100px; height: auto; }
+.logo-texto { max-width: 250px; height: auto; }
 
-.logo-texto {
-    max-width: 480px;
-}
-
-.logo-mascote, .logo-texto {
-    height: auto;
-}
-
-/* =========================
-   TEXTO
-========================= */
 .description {
     color: var(--text-muted);
-    font-size: 1.05rem;
-    line-height: 1.5;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    font-size: 1rem;
 }
 
-/* =========================
-   FORMULÁRIO
-========================= */
 .cadastro-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
     width: 100%;
-}
-
-.cadastro-form input {
-    padding: 12px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    width: 100%;
-    max-width: 350px;
-    transition: all 0.3s ease;
-    outline: none;
-    background-color: var(--white);
-}
-
-.cadastro-form input::placeholder {
-    color: #999;
-    font-size: 0.95rem;
-}
-
-/* FOCUS */
-.cadastro-form input:focus {
-    border-color: var(--primary-purple); 
-    box-shadow: 0 0 10px rgba(75, 0, 130, 0.25);
-    transform: translateY(-2px);
-}
-
-/* ERRO / SUCESSO */
-input.erro {
-    border-color: #dc3545 !important;
-    box-shadow: 0 0 6px rgba(220, 53, 69, 0.3);
-}
-
-input.sucesso {
-    border-color: #28a745;
-}
-
-/* =========================
-   MENSAGENS
-========================= */
-#mensagem,
-#mensagem2,
-#mensagem3,
-#mensagem4 {
-    font-size: 0.9rem;
-    margin: 5px 0 0;
-    text-align: left;
-    max-width: 350px;
-    width: 100%;
-}
-
-/* =========================
-   BOTÃO
-========================= */
-.btn-login {
-    background-color: var(--secondary-orange);
-    color: var(--white);
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    max-width: 350px;
-    transition: all 0.3s ease;
-}
-
-.btn-login:hover {
-    filter: brightness(1.1);
-    transform: scale(1.02);
-}
-
-.btn-login:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    filter: none;
-}
-
-/* =========================
-   BOTÃO VOLTAR
-========================= */
-.return {
-    position: fixed;
-    top: 25px; 
-    left: 25px; 
-    z-index: 1000; 
-}
-
-.return-link {
-    display: flex;      
-    align-items: center; 
-    gap: 10px;      
-    
-    text-decoration: none;
-    background-color: var(--white);
-    color: var(--primary-purple);
-    padding: 12px 20px;
-    border-radius: 50px; 
-    font-weight: bold;
-    font-size: 0.9rem;
-    
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-.return-icon {
-    width: 18px; 
-    height: auto;
-    filter: sepia(100%) hue-rotate(240deg) saturate(300%) brightness(50%);
-}
-
-.return-link:hover {
-    background-color: var(--primary-purple);
-    color: var(--white);
-    transform: translateX(-5px);
-}
-
-/* =========================
-   RESPONSIVO
-========================= */
-@media (max-width: 480px) {
-    .welcome-card {
-        padding: 25px;
-    }
-
-    .return {
-        top: 15px;
-        left: 15px;
-    }
-
-    .return-link {
-        padding: 10px 15px;
-        font-size: 0.8rem;
-    }
-
-    .return-icon {
-        width: 16px;
-    }
-}
-
-/* =========================
-   ANIMAÇÃO
-========================= */
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    gap: 10px; /* Campos mais próximos */
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 350px;
+    max-width: 350px; /* Cadastro maior: 350px */
+    text-align: left;
 }
 
 .input-group label {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-muted);
-    margin-bottom: 5px;
-    text-align: left;
+    margin-bottom: 3px;
+}
+
+.cadastro-form input {
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.cadastro-form input:focus { border-color: var(--primary-purple); }
+
+.btn-login {
+    background-color: var(--primary-purple);
+    color: var(--white);
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    max-width: 350px;
+    margin-top: 10px; /* Botão mais perto */
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+.messages-container { width: 100%; max-width: 350px; margin-top: 5px; }
+
+.return { position: fixed; top: 25px; left: 25px; }
+.return-link {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; background: var(--white);
+    padding: 10px 20px; border-radius: 50px;
+    color: var(--primary-purple); font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.return-icon { width: 18px; filter: invert(13%) sepia(90%) saturate(5000%) hue-rotate(260deg); }
+
+/* RESPONSIVIDADE CADASTRO */
+@media (max-width: 600px) {
+    .complete-logo { flex-direction: column; }
+    .input-group, .btn-login, .messages-container { max-width: 100%; }
+    .welcome-card { padding: 20px; width: 95%; }
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }

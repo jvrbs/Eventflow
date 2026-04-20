@@ -19,6 +19,7 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
+    overflow-x: hidden; /* Evita scroll horizontal indesejado */
 }
 
 /* 2. HEADER (PÍLULA EXPANSÍVEL) */
@@ -50,7 +51,6 @@ body {
     flex-shrink: 0;
 }
 
-/* Links horizontais */
 .menu-horizontal-links {
     display: flex;
     align-items: center;
@@ -78,11 +78,8 @@ body {
     transition: 0.2s;
 }
 
-.menu-horizontal-links a:hover {
-    color: var(--secondary-orange);
-}
+.menu-horizontal-links a:hover { color: var(--secondary-orange); }
 
-/* Botão de hambúrguer */
 .menu-hamburguer {
     background: none;
     border: none;
@@ -102,9 +99,8 @@ body {
     transition: 0.3s;
 }
 
-.menu-hamburguer:hover .barrinha {
-    background-color: var(--primary-purple);
-}
+/* 3. CONTEÚDO PRINCIPAL */
+.home-content { padding-top: 120px; }
 
 /* 3. CONTEÚDO PRINCIPAL (MAIN) */
 .home-content {
@@ -155,11 +151,7 @@ body {
 }
 
 /* 4. BUSCA E FILTROS */
-.events-container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
+.events-container { width: 90%; max-width: 1200px; margin: 0 auto; }
 
 .section-header {
     display: flex;
@@ -175,11 +167,7 @@ body {
     font-size: 1.8rem; 
 }
 
-.search-filter-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+.search-filter-group { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
 
 .input-busca-inline {
     padding: 10px 15px;
