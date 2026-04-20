@@ -6,8 +6,9 @@
     <title>Minha Conta - EventFlow</title>    
 
     <link rel="icon" type="image/png" href="../../img/Logo eventflow.png">
-    <link rel="stylesheet" href="conta.css">
+    
     <link rel="stylesheet" href="../home.css">
+    <link rel="stylesheet" href="conta.css">
 </head>
 
 <body>
@@ -19,7 +20,7 @@
         <nav class="menu-horizontal-links">
             <a href="../home.html">Início</a>
             <a href="#">Ingressos</a>
-            <a href="#" onclick="logout('../../inicial/index.html')" class="btn-opcao logout">Sair da Conta</a>
+            <a href="#" onclick="logout()">Sair</a>
         </nav>
         <button class="menu-hamburguer" id="btnMenu">
             <span class="barrinha"></span>
@@ -33,32 +34,28 @@
     <main class="conta-wrapper">
         <section class="menu-conta-card">
             <div class="avatar-topo">
-            <div class="avatar-image"></div> 
-            <h2></h2> 
+                <div class="avatar-image">?</div> <h2>Carregando...</h2> 
             </div>
 
             <nav class="opcoes-conta">
                 <a href="../info-pessoal/info-pessoais.html" class="btn-opcao">
                     Informações Pessoais
                 </a>
-
                 <a href="#" class="btn-opcao">
                     Segurança e Senha
                 </a>
-
                 <a href="#" class="btn-opcao">
                     Histórico de Compras
                 </a>
-                
-                <a href="../../inicial/index.html" class="btn-opcao logout">
+                <a href="#" onclick="logout()" class="btn-opcao logout">
                     Sair da Conta
                 </a>
             </nav>
         </section>
     </main>
 
-    <!-- Antes de fechar o </body> -->
     <script src="../../session.js"></script>
+    <script src="../home.js"></script>
     <script src="conta.js"></script>
-    </body>
+</body>
 </html>
