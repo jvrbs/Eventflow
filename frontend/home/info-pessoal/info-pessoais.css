@@ -92,3 +92,54 @@
     font-size: 0.9rem;
     padding: 10px;
 }
+
+/* Estilização para o campo de telefone e email específica, se necessário */
+.form-group input[type="tel"], 
+.form-group input[type="email"] {
+    letter-spacing: 0.5px; /* Melhora a leitura de números e endereços */
+}
+
+/* Melhoria na Mensagem de Validação */
+.mensagem-validacao {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+    min-height: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    display: none; /* Escondido por padrão */
+}
+
+/* Classes utilitárias para o JS aplicar */
+.msg-erro {
+    display: block;
+    color: #d32f2f;
+    background-color: #ffebee;
+    border: 1px solid #ffcdd2;
+}
+
+.msg-sucesso {
+    display: block;
+    color: #388e3c;
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+}
+
+/* Efeito de carregamento no botão salvar */
+.btn-salvar:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 480px) {
+    .form-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+    
+    .info-pessoais-wrapper {
+        padding-top: 100px;
+    }
+}

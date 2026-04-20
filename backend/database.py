@@ -119,3 +119,24 @@ def validar_cpf(cpf: str) -> bool:
             return False
 
     return True
+
+
+def atualiza_usuario_db(id, nome, email, telefone, data_nascimento):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        query = """
+        UPDATE usuario 
+        SET nome = %s, email = %s, telefone = %s, data_nascimento = %s 
+        WHERE id = %s
+        """
+        
+        cursor.execute(query, (nome, email, telefone, data_nascimento, id))
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        print(f"Erro ao atualizar banco: {err}")
+        raise

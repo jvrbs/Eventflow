@@ -12,3 +12,9 @@ class UsuarioCadastro(BaseModel):
 class UsuarioLogin(BaseModel):
     email: EmailStr
     password: str
+
+class UsuarioAtualizacao(BaseModel):
+    nome_completo: str
+    email: EmailStr
+    telefone: str
+    data_nascimento: date

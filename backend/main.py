@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models import UsuarioCadastro, UsuarioLogin
+from models import UsuarioCadastro, UsuarioLogin, UsuarioAtualizacao
 from database import (
     procura_usuario_por_email,
     procura_usuario_por_cpf,
     cadastra_usuario,
     verifica_senha_usuario,
-    validar_cpf
+    validar_cpf,
+    atualiza_usuario_db
 )
 import bcrypt
 import re
@@ -120,3 +121,40 @@ def login(dados: UsuarioLogin):
 
     except Exception as e:
         return {"erro": f"Erro ao fazer login: {str(e)}"}
+    
+
+
+# ROTA DE ATUALIZAÇÃO DE PERFIL
+@app.put("/atualizar-perfil/{usuario_id}")
+def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
+    try:
+        # 1. Validação de Nome (Backend)
+        if not re.match(r"^[A-Za-zÀ-ÿ\s]{3,}$", dados.nome_completo):
+            return {"erro": "Nome inválido."}
+
+        # 2. Validação de Idade (12-120 anos)
+        hoje = date.today()
+        idade = hoje.year - dados.data_nascimento.year - (
+            (hoje.month, hoje.day) < (dados.data_nascimento.month, dados.data_nascimento.day)
+        )
+        if idade < 12 or idade > 120:
+            return {"erro": "Data de nascimento fora do intervalo permitido."}
+
+        # 3. Verificar se o novo email já existe em OUTRO usuário
+        usuario_existente = procura_usuario_por_email(dados.email)
+        if usuario_existente and usuario_existente['id'] != usuario_id:
+            return {"erro": "Este e-mail já está sendo usado por outra conta."}
+
+        # 4. Executar o Update no Banco
+        atualiza_usuario_db(
+            usuario_id,
+            dados.nome_completo,
+            dados.email,
+            dados.telefone,
+            dados.data_nascimento
+        )
+
+        return {"mensagem": "Dados atualizados com sucesso!"}
+
+    except Exception as e:
+        return {"erro": f"Erro interno ao atualizar: {str(e)}"}
