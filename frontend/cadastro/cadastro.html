@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - EventFlow</title>
+    <link rel="stylesheet" href="cadastro.css">
+    <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
+</head>
+
+<body>
+    <main>
+        <div class="return">
+            <a href="../inicial/index.html" class="return-link">
+                <img src="../img/seta esquerda.png" alt="Voltar" class="return-icon">
+                Voltar
+            </a>
+        </div>
+
+        <div class="welcome-container">
+            <div class="welcome-card">
+                <div class="complete-logo">
+                    <img src="../img/Logo eventflow.png" alt="Mascote Flow" class="logo-mascote">
+                    <img src="../img/Logo texto.png" alt="EventFlow" class="logo-texto">
+                </div>
+
+                <p class="description">
+                    Sua jornada para eventos incríveis começa aqui.<br>
+                    Faça seu cadastro:
+                </p>
+
+                <form class="cadastro-form" id="formCadastro">
+                    <div class="input-group">
+                        <label for="nomeCompletocadastro">Nome completo</label>
+                        <input type="text" name="nome_completo" id="nomeCompletocadastro" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dataNascimentoCadastro">Data de nascimento</label>
+                        <input type="date" name="data_nascimento" id="dataNascimentoCadastro" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="emailCadastro">Email</label>
+                        <input type="email" name="email" id="emailCadastro" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cpfCadastro">CPF</label>
+                        <input type="text" name="cpf" id="cpfCadastro" maxlength="14" inputmode="numeric" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="telefoneCadastro">Telefone</label>
+                        <input type="tel" name="telefone" id="telefoneCadastro" maxlength="15" inputmode="numeric" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="passwordCadastro">Senha</label>
+                        <input type="password" name="password" id="passwordCadastro" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirmarSenhaCadastro">Confirmar senha</label>
+                        <input type="password" name="confirm_password" id="confirmarSenhaCadastro" required>
+                    </div>
+
+                    <div class="messages-container">
+                        <p id="mensagem" style="color: red; display: none;"></p>
+                        <p id="mensagem2" style="color: red; display: none;"></p>
+                        <p id="mensagem3" style="color: red; display: none;"></p>
+                        <p id="mensagem4" style="color: blue; display: none;"></p>
+                    </div>
+
+                    <button type="submit" class="btn-login">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../auth.js"></script>
+</body>
+</html>

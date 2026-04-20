@@ -1,0 +1,88 @@
+:root {
+    --primary-purple: #4B0082;
+    --secondary-orange: #FF6B00;
+    --bg-light: #F0F2F5;
+    --text-dark: #212529;
+    --text-muted: #6C757D;
+    --white: #FFFFFF;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+}
+
+.welcome-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.welcome-card {
+    background-color: var(--white);
+    padding: 60px 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    animation: slideInUp 1s ease;
+}
+
+.complete-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.logo-mascote { max-width: 180px; height: auto; }
+.logo-texto { max-width: 400px; height: auto; }
+
+.description {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    padding: 15px 35px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-login { background-color: var(--primary-purple); color: var(--white); }
+.btn-register { background-color: var(--secondary-orange); color: var(--white); }
+
+.btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+/* RESPONSIVIDADE INDEX */
+@media (max-width: 600px) {
+    .complete-logo { flex-direction: column; }
+    .logo-mascote { max-width: 100px; }
+    .logo-texto { max-width: 250px; }
+    .action-buttons { flex-direction: column; width: 100%; align-items: center; }
+    .btn { width: 100%; max-width: 280px; text-align: center; }
+    .welcome-card { padding: 40px 20px; }
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EventFlow</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
+</head>
+<body>
+    <main>
+        <div class="return">
+            <a href="../inicial/index.html" class="return-link">
+                <img src="../img/seta esquerda.png" alt="Voltar" class="return-icon">
+                Voltar
+            </a>
+        </div>
+
+        <div class="welcome-container">
+            <div class="welcome-card">
+                <div class="complete-logo">
+                    <img src="../img/Logo eventflow.png" alt="Mascote Flow" class="logo-mascote">
+                    <img src="../img/Logo texto.png" alt="EventFlow" class="logo-texto">
+                </div>
+
+                <div class="brand-description">
+                    <p class="description">
+                        Que bom te ver de novo! <br>
+                        Entre com sua conta para continuar:
+                    </p>
+                </div>
+
+                <form action="#" method="post" class="login-form" id="formLogin">
+                    <div class="input-group">
+                        <label for="emailLogin">Email</label>
+                        <input type="email" name="email" id="emailLogin" placeholder="Email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="passwordLogin">Senha</label>
+                        <input type="password" name="password" id="passwordLogin" placeholder="Senha" required>
+                    </div>
+
+                    <p id="mensagem3" style="color: red; display: none;">Insira os campos: Senha ou E-mail</p>
+                    
+                    <button type="submit" class="btn-login">Entrar</button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Ainda não tem conta? <a href="../cadastro/cadastro.html">Cadastre-se</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../auth.js"></script>
+</body>
+</html>

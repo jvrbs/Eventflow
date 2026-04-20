@@ -4,7 +4,11 @@
 .env.*.local
 
 # Python
+<<<<<<< HEAD
 _pycache_/
+=======
+__pycache__/
+>>>>>>> feature/frontend
 *.py[cod]
 *$py.class
 *.so
@@ -58,4 +62,8 @@ logs/
 ._*
 .Spotlight-V100
 .Trashes
+<<<<<<< HEAD
 ehthumbs.db
+=======
+ehthumbs.db
+>>>>>>> feature/frontend

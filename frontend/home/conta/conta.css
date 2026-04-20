@@ -1,0 +1,129 @@
+/* 1. VARIÁVEIS (Mantendo o padrão do EventFlow) */
+:root {
+    --primary-purple: #4B0082;
+    --secondary-orange: #FF6B00;
+    --bg-light: #F0F2F5;
+    --text-dark: #212529;
+    --text-muted: #6C757D;
+    --white: #FFFFFF;
+}
+
+/* 2. ESTRUTURA PRINCIPAL */
+.conta-wrapper {
+    padding-top: 150px; /* Espaço para o header fixo não cobrir o card */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding-bottom: 50px;
+}
+
+/* 3. CARD DE MENU DA CONTA */
+.menu-conta-card {
+    background-color: var(--white);
+    width: 90%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 40px; /* Estilo arredondado do seu design */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+    border: 2px solid #eee;
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* 4. AVATAR E TOPO */
+.avatar-image {
+    width: 100px;
+    height: 100px;
+    background-color: var(--primary-purple);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 auto 15px;
+    border: 4px solid var(--bg-light);
+}
+
+.avatar-topo h2 {
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    font-size: 1.5rem;
+}
+
+/* 5. OPÇÕES DE NAVEGAÇÃO */
+.opcoes-conta {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-opcao {
+    display: block;
+    text-decoration: none;
+    color: var(--text-dark);
+    padding: 18px;
+    border: 2px solid var(--text-dark);
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-opcao:hover {
+    background-color: var(--primary-purple);
+    color: white;
+    border-color: var(--primary-purple);
+    transform: scale(1.02);
+}
+
+/* Estilo específico para o botão de Sair */
+.btn-opcao.logout {
+    border-color: #dc3545; /* Vermelho para alerta */
+    color: #dc3545;
+}
+
+.btn-opcao.logout:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* --- ANIMAÇÃO --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================================
+   6. RESPONSIVIDADE (MEDIA QUERIES) 
+   =========================================== */
+
+@media (max-width: 600px) {
+    .conta-wrapper {
+        padding-top: 100px; /* Header fica menor no mobile */
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .menu-conta-card {
+        padding: 30px 20px;
+        border-radius: 30px; /* Reduz um pouco o arredondamento */
+    }
+
+    .avatar-image {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+
+    .avatar-topo h2 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-opcao {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+}
