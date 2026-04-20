@@ -3,18 +3,30 @@
 .env.local
 .env.*.local
 
+.gitignore
+
 # Python
-<<<<<<< HEAD
 _pycache_/
-=======
 __pycache__/
->>>>>>> feature/frontend
 *.py[cod]
 *$py.class
+*.pyo
+*.pyd
 *.so
 .Python
+pyvenv.cfg
+pip-wheel-metadata/
+*.egg-info/
+*.egg
+.installed.cfg
+venv/
+ENV/
+env/
+.venv/
+.venv
+
+# Packages
 build/
-develop-eggs/
 dist/
 downloads/
 eggs/
@@ -25,27 +37,35 @@ parts/
 sdist/
 var/
 wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-venv/
-ENV/
-env/
-.venv
+
+# Test / coverage
+.coverage
+coverage.*
+.cache/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
 
 # Node.js
 node_modules/
 npm-debug.log
 yarn-error.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+.pnpm-debug.log
 
-# IDE
+# Editor / IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.DS_Store
-Thumbs.db
+*.bak
+*.tmp
+*.temp
 
 # Logs
 *.log
@@ -55,6 +75,7 @@ logs/
 *.db
 *.sqlite
 *.sqlite3
+*.db-journal
 
 # OS
 .DS_Store
@@ -62,8 +83,31 @@ logs/
 ._*
 .Spotlight-V100
 .Trashes
-<<<<<<< HEAD
 ehthumbs.db
-=======
+
 ehthumbs.db
->>>>>>> feature/frontend
+
+Thumbs.db
+Desktop.ini
+
+# Build artifacts
+*.class
+*.dll
+*.exe
+*.o
+*.pyc
+*.pyd
+
+# Python tooling
+.mypy_cache/
+.ropeproject/
+.python-version
+
+# OneDrive
+~$*
+.*.cloud
+
+# Misc
+.idea/
+.vscode/
+>>>>>>> 442614a22b0cb859360d4694a74f7a98e5cda208
