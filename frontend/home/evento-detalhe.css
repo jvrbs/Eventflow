@@ -1,0 +1,177 @@
+/* evento-detalhe.css */
+
+/* ---- HERO DO EVENTO ---- */
+.detalhe-hero {
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    min-height: 220px;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(135deg, #4B0082 0%, #7b1fa2 100%); /* sobrescrito pelo JS */
+    position: relative;
+}
+
+.detalhe-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 100%);
+}
+
+.detalhe-hero-inner {
+    position: relative;
+    z-index: 1;
+    padding: 32px 36px;
+    color: #fff;
+}
+
+.detalhe-hero-inner .badge {
+    margin-bottom: 12px;
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.detalhe-titulo {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 14px;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.detalhe-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    font-size: 0.95rem;
+    opacity: 0.92;
+}
+
+/* ---- LAYOUT DE 2 COLUNAS ---- */
+.detalhe-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ---- DESCRIÇÃO ---- */
+.detalhe-descricao h2 {
+    color: var(--primary-purple);
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+}
+
+.descricao-texto {
+    color: var(--text-dark);
+    font-size: 0.97rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+}
+
+/* ---- ASIDE / CARD DE INSCRIÇÃO ---- */
+.inscricao-card {
+    position: sticky;
+    top: 100px;
+}
+
+.inscricao-info {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--bg-light);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.info-valor {
+    font-size: 0.97rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* ---- BARRA DE OCUPAÇÃO ---- */
+.ocupacao-bar-container {
+    margin-bottom: 18px;
+}
+
+.ocupacao-bar {
+    height: 8px;
+    background: #eee;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.ocupacao-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4B0082, #7b1fa2);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+    width: 0%;
+}
+
+.ocupacao-fill.lotado {
+    background: linear-gradient(90deg, #c62828, #e53935);
+}
+
+.ocupacao-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* ---- BOTÃO INSCREVER ---- */
+.btn-inscrever {
+    font-size: 1rem;
+}
+
+/* ---- LINK VOLTAR ---- */
+.btn-voltar-link {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.btn-voltar-link:hover { color: var(--primary-purple); }
+
+/* ---- RESPONSIVIDADE ---- */
+@media (max-width: 768px) {
+    .detalhe-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .inscricao-card {
+        position: static;
+    }
+
+    .detalhe-titulo { font-size: 1.5rem; }
+    .detalhe-hero-inner { padding: 24px 20px; }
+}
+
+@media (max-width: 480px) {
+    .detalhe-meta { flex-direction: column; gap: 8px; }
+}
