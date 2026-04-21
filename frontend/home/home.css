@@ -228,13 +228,6 @@ body {
     margin-left: 0; /* Garante que não haja recuo negativo */
 }
 
-<<<<<<< HEAD
-    .events-grid { grid-template-columns: 1fr; } /* Um card por linha no celular pequeno */
-    
-    .hero-text h1 { font-size: 1.5rem; }
-}
-
-=======
 .btn-gerenciar {
     margin-right: 0; /* Garante que não haja recuo negativo */
     background: var(--secondary-orange) !important;
@@ -329,4 +322,3 @@ body {
     .search-filter-group { width: 100%; }
     .input-busca-inline { width: 100%; }
 }
->>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
