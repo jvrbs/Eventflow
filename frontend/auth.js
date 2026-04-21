@@ -180,8 +180,6 @@ if (formularioLogin) {
                 body: JSON.stringify({ email, password: senha })
             });
 
-            if (!resposta.ok) throw new Error();
-
             const resultado = await resposta.json();
 
             if (!resposta.ok) {

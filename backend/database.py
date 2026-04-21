@@ -140,3 +140,28 @@ def atualiza_usuario_db(id, nome, email, telefone, data_nascimento):
     except mysql.connector.Error as err:
         print(f"Erro ao atualizar banco: {err}")
         raise
+
+def procura_usuario_por_id(usuario_id: int):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM usuario WHERE id = %s", (usuario_id,))
+        usuario = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return usuario
+    except mysql.connector.Error as err:
+        print(f"Erro ao procurar usuário por ID: {err}")
+        return None
+
+def deleta_usuario_db(usuario_id: int):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM usuario WHERE id = %s", (usuario_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        print(f"Erro ao deletar usuário: {err}")
+        raise

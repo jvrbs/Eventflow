@@ -7,7 +7,9 @@ from database import (
     cadastra_usuario,
     verifica_senha_usuario,
     validar_cpf,
-    atualiza_usuario_db
+    atualiza_usuario_db,
+    procura_usuario_por_id,   
+    deleta_usuario_db          
 )
 import bcrypt
 import re
@@ -117,3 +119,13 @@ def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
         dados.data_nascimento
     )
     return {"mensagem": "Dados atualizados com sucesso!"}
+
+
+# DELETAR CONTA
+@app.delete("/deletar-conta/{usuario_id}", status_code=200)
+def deletar_conta(usuario_id: int):
+    if not procura_usuario_por_id(usuario_id):
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+
+    deleta_usuario_db(usuario_id)
+    return {"mensagem": "Conta deletada com sucesso."}
