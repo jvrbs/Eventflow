@@ -3,10 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventFlow - Sua jornada para eventos</title>    
+    <title>EventFlow - Sua jornada para eventos</title>
 
     <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
     <link rel="stylesheet" href="home.css">
+
+    <style>
+        /* ── Cards ── */
+        .event-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 4px 0 0;
+            line-height: 1.3;
+        }
+
+        /* ── Rodapé do card ── */
+        .vagas-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .inscrito-label { color: #388e3c; }
+
+        .btn-inscrever {
+            background: var(--primary-purple);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-inscrever:hover { filter: brightness(1.15); }
+
+        .btn-cancelar-inscricao {
+            background: #fff;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-cancelar-inscricao:hover {
+            background: #fce8e6;
+        }
+
+        .btn-gerenciar {
+            background: var(--secondary-orange);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-gerenciar:hover { filter: brightness(1.1); }
+
+        .tag-cancelado, .tag-lotado {
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .tag-cancelado { background: #fce8e6; color: #d32f2f; }
+        .tag-lotado    { background: #fff3e0; color: #e65100; }
+
+        /* ── Botão criar evento (organizador) ── */
+        .btn-criar-evento {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--secondary-orange);
+            color: #fff;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-criar-evento:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        /* ── Estado vazio ── */
+        .sem-eventos {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 60px 0;
+            font-size: 1.05rem;
+        }
+
+        /* ── Skeleton loader ── */
+        .skeleton-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .skeleton-thumb {
+            height: 180px;
+            background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+
+        .skeleton-body { padding: 20px; }
+
+        .skeleton-line {
+            height: 14px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.medium { width: 80%; }
+
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
 </head>
 <body>
 
@@ -34,7 +166,7 @@
         <section class="hero-section">
             <div class="hero-text">
                 <h1>O FLUXO DOS <span class="destaque">MELHORES</span> EVENTOS</h1>
-                <p>Descubra Experiências únicas e garanta seu lugar nos eventos mais exclusivos.</p>
+                <p>Descubra experiências únicas e garanta seu lugar nos eventos mais exclusivos.</p>
                 <button class="btn-explorar">Explorar Agora</button>
             </div>
         </section>
@@ -42,22 +174,54 @@
         <section class="events-container">
             <div class="section-header">
                 <h2 class="titulo-sessao">Próximos Eventos</h2>
-                
+
                 <div class="search-filter-group">
                     <input type="text" placeholder="Buscar evento..." class="input-busca-inline">
-                    
+
                     <div class="filters-inline">
                         <button class="filter-btn active">Tudo</button>
                         <button class="filter-btn">Música</button>
                         <button class="filter-btn">Teatro</button>
+                        <button class="filter-btn">Tecnologia</button>
+                        <button class="filter-btn">Esportes</button>
+                        <button class="filter-btn">Arte</button>
                     </div>
+
+                    <a href="criar-evento/criar-evento.html" class="btn-criar-evento" id="btnCriarEvento">
+                        + Criar Evento
+                    </a>
                 </div>
             </div>
 
-
+            <!-- Skeleton inicial enquanto a API carrega -->
+            <div class="events-grid" id="eventsGrid">
+                <div class="skeleton-card">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
-
 
     <script src="../session.js"></script>
     <script src="home.js"></script>
