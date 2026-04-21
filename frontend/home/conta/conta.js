@@ -46,10 +46,39 @@ window.onclick = function(event) {
 }
 
 // Evento do botão de confirmação final (Preparado para o CRUD futuro)
-document.getElementById('btnFinalExcluir')?.addEventListener('click', () => {
-    // TAREFA PESSOA 3: Aqui será inserido o fetch(..., { method: 'DELETE' })
-    console.log("Ação de exclusão disparada. Aguardando integração com API.");
-    
-    // Por enquanto, apenas fecha o modal
-    fecharModal();
+document.getElementById('btnFinalExcluir')?.addEventListener('click', async () => {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuarioLogado || !usuarioLogado.id) {
+        fecharModal();
+        logout('../../inicial/index.html');
+        return;
+    }
+
+    const btnConfirmar = document.getElementById('btnFinalExcluir');
+    btnConfirmar.disabled = true;
+    btnConfirmar.textContent = "Excluindo...";
+
+    try {
+        const resposta = await fetch(`http://localhost:8000/deletar-conta/${usuarioLogado.id}`, {
+            method: "DELETE"
+        });
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok) {
+            const msgErro = document.querySelector('.modal-content p');
+            if (msgErro) msgErro.textContent = resultado.detail || "Erro ao deletar conta. Tente novamente.";
+            return;
+        }
+
+        localStorage.removeItem('usuario');
+        window.location.href = '../../inicial/index.html';
+
+    } catch (erro) {
+        const msgErro = document.querySelector('.modal-content p');
+        if (msgErro) msgErro.textContent = "Erro ao conectar com o servidor.";
+    } finally {
+        btnConfirmar.disabled = false;
+        btnConfirmar.textContent = "Confirmar Exclusão";
+    }
 });

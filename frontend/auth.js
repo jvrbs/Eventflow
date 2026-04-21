@@ -119,6 +119,7 @@ if (formularioCadastro) {
         }
 
         // Envio para o servidor
+        // PARA:
         try {
             const resposta = await fetch("http://localhost:8000/cadastrar", {
                 method: "POST",
@@ -132,13 +133,17 @@ if (formularioCadastro) {
                     password: senha
                 })
             });
+
             const resultado = await resposta.json();
-            if (resultado.erro) {
-                mensagem.textContent = resultado.erro;
+
+            if (!resposta.ok) {
+                mensagem.textContent = resultado.detail || "Erro ao cadastrar.";
                 mensagem.style.display = 'block';
-            } else {
-                window.location.href = "../login/login.html";
+                return;
             }
+
+            window.location.href = "../login/login.html";
+
         } catch (erro) {
             mensagem.textContent = "Erro ao conectar com o servidor.";
             mensagem.style.display = 'block';
@@ -175,23 +180,17 @@ if (formularioLogin) {
                 body: JSON.stringify({ email, password: senha })
             });
 
-            if (!resposta.ok) throw new Error();
-
             const resultado = await resposta.json();
 
-            if (resultado.erro) {
-                mensagem3.textContent = resultado.erro;
+            if (!resposta.ok) {
+                mensagem3.textContent = resultado.detail || "Email ou senha incorretos.";
                 mensagem3.style.display = 'block';
-            } else {
-                
-                if (resultado.token) {
-                    localStorage.setItem('token', resultado.token);
-                }
-
-                localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
-
-                window.location.href = "../home/home.html";
+                return;
             }
+
+            if (resultado.token) localStorage.setItem('token', resultado.token);
+            localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
+            window.location.href = "../home/home.html";
 
         } catch (erro) {
             if(mensagem3) {

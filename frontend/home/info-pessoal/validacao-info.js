@@ -114,12 +114,20 @@ formInfo.addEventListener('submit', async function(event) {
         });
 
         const resultado = await resposta.json();
-        if (resultado.erro) {
-            exibirMensagem(resultado.erro, "erro");
-        } else {
-            exibirMensagem("Informações atualizadas!", "sucesso");
-            localStorage.setItem('usuario', JSON.stringify({ ...usuarioLogado, nome_completo: nome, email, telefone, data_nascimento: inputDataNascimento.value }));
+
+        if (!resposta.ok) {
+            exibirMensagem(resultado.detail || "Erro ao salvar.", "erro");
+            return;
         }
+
+        exibirMensagem("Informações atualizadas!", "sucesso");
+        localStorage.setItem('usuario', JSON.stringify({
+            ...usuarioLogado,
+            nome_completo: nome,
+            email,
+            telefone,
+            data_nascimento: inputDataNascimento.value
+        }));
     } catch (erro) {
         exibirMensagem(erro.message || "Erro de conexão.", "erro");
     } finally {
