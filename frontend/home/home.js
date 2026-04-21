@@ -99,7 +99,8 @@ function renderizarCard(evento, inscricaoId, usuarioId, perfil) {
                 <p class="event-local">📍 ${evento.local}</p>
             </div>
             <div class="card-footer">
-                ${rodape}
+                <span class="vagas-label">${evento.vagas_restantes} vagas</span>
+                <button class="btn-gerenciar" onclick="abrirGerenciar(${evento.id})">Gerenciar</button>
             </div>
         </article>`;
 }

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Evento - EventFlow</title>
+    <link rel="icon" type="image/png" href="../../img/Logo eventflow.png">
+    <link rel="stylesheet" href="../home/home.css">
+    <link rel="stylesheet" href="../criar-evento/eventos.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container-sm">
+            <div class="card-form">
+                <h2>⚙️ Gerenciar Evento</h2>
+                
+                <form id="formGerenciar" class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Nome do Evento</label>
+                        <input type="text" id="nome" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="categoria" required>
+                            <option value="Música">Música</option>
+                            <option value="Teatro">Teatro</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Esportes">Esportes</option>
+                            <option value="Arte">Arte</option>
+                            <option value="Gastronomia">Gastronomia</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Capacidade</label>
+                        <input type="number" id="capacidade" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Data e Hora</label>
+                        <input type="datetime-local" id="data_hora" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Local</label>
+                        <input type="text" id="local" required>
+                    </div>
+
+                    <div class="form-actions full-width">
+                        <a href="../home.html" class="btn-secondary">← Voltar</a>
+                        
+                        <button type="submit" class="btn-primary" id="btnSalvar">
+                            Salvar Alterações
+                        </button>
+
+                        <button type="button" class="btn-secondary btn-danger btn-full-row" id="btnCancelarEvento">
+                            🚫 Cancelar Evento Permanente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <div id="modalConfirmacao" class="modal-overlay">
+            <div class="modal-content">
+                <h3>⚠️ Cancelar Evento?</h3>
+                <p>Esta ação é permanente e não poderá ser desfeita. Deseja continuar?</p>
+                <div class="modal-actions">
+                    <button id="confirmarNao" class="btn-modal-secundario">Manter Evento</button>
+                    <button id="confirmarSim" class="btn-modal-perigo">Sim, Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+    <script src="gerenciar.js"></script>
+</body>
+</html>
