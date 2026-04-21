@@ -14,6 +14,7 @@
             <img src="../img/Logo texto solo.png" alt="Logo EventFlow" class="img-logo">
         </div>
         <nav class="menu-horizontal-links" id="menuLinks">
+            <a href="criar-evento.html" style="color: var(--secondary-orange); font-weight: 800;">+ Criar Evento</a>
             <a href="conta/conta.html">Conta</a>
             <a href="#">Ingressos</a>
             <a href="#" onclick="logout()">Sair</a>
@@ -60,39 +61,11 @@
                 </div>
             </div>
 
-            <!-- Mensagem de erro de carregamento -->
             <div id="msgErroHome" style="display:none; color:#d32f2f; background:#ffebee; border:1px solid #ffcdd2; padding:14px 18px; border-radius:12px; margin-bottom:20px; font-weight:500;"></div>
 
-            <!-- Grade de eventos — preenchida pelo JS -->
             <div class="events-grid" id="eventsGrid">
-                <!-- Skeletons enquanto carrega -->
-                <div class="event-card skeleton-card" aria-hidden="true">
-                    <div class="card-thumb" style="background:#e0e0e0;"></div>
-                    <div class="card-body">
-                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:40%;margin-bottom:10px;"></div>
-                        <div style="height:20px;background:#e0e0e0;border-radius:6px;width:80%;margin-bottom:8px;"></div>
-                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:60%;"></div>
-                    </div>
                 </div>
-                <div class="event-card skeleton-card" aria-hidden="true">
-                    <div class="card-thumb" style="background:#e8e8e8;"></div>
-                    <div class="card-body">
-                        <div style="height:14px;background:#e8e8e8;border-radius:6px;width:35%;margin-bottom:10px;"></div>
-                        <div style="height:20px;background:#e8e8e8;border-radius:6px;width:75%;margin-bottom:8px;"></div>
-                        <div style="height:14px;background:#e8e8e8;border-radius:6px;width:50%;"></div>
-                    </div>
-                </div>
-                <div class="event-card skeleton-card" aria-hidden="true">
-                    <div class="card-thumb" style="background:#e0e0e0;"></div>
-                    <div class="card-body">
-                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:45%;margin-bottom:10px;"></div>
-                        <div style="height:20px;background:#e0e0e0;border-radius:6px;width:70%;margin-bottom:8px;"></div>
-                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:55%;"></div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Estado vazio -->
             <div id="estadoVazio" style="display:none; text-align:center; padding:60px 20px;">
                 <div style="font-size:3.5rem; opacity:0.35; margin-bottom:16px;">🎭</div>
                 <h3 style="color:#212529; margin-bottom:8px;">Nenhum evento encontrado</h3>
