@@ -18,22 +18,26 @@ import os
 
 app = FastAPI()
 
-# CORS
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost:8000",
+    "http://127.0.0.1:5500"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("ALLOWED_ORIGINS", "http://localhost:5500").split(","),  
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ROTA TESTE
 @app.get("/")
 def inicio():
     return {"mensagem": "EventFlow rodando!"}
 
 
-# CADASTRO
 @app.post("/cadastrar", status_code=201)
 def cadastro(dados: UsuarioCadastro):
     if not re.match(r"^[A-Za-zÀ-ÿ\s]{3,}$", dados.nome_completo):
@@ -73,7 +77,6 @@ def cadastro(dados: UsuarioCadastro):
     return {"mensagem": "Usuário cadastrado com sucesso!"}
 
 
-# LOGIN
 @app.post("/login")
 def login(dados: UsuarioLogin):
     usuario = procura_usuario_por_email(dados.email)
@@ -94,7 +97,6 @@ def login(dados: UsuarioLogin):
     }
 
 
-# ATUALIZAÇÃO DE PERFIL
 @app.put("/atualizar-perfil/{usuario_id}")
 def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
     if not re.match(r"^[A-Za-zÀ-ÿ\s]{3,}$", dados.nome_completo):
@@ -121,7 +123,6 @@ def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
     return {"mensagem": "Dados atualizados com sucesso!"}
 
 
-# DELETAR CONTA
 @app.delete("/deletar-conta/{usuario_id}", status_code=200)
 def deletar_conta(usuario_id: int):
     if not procura_usuario_por_id(usuario_id):

@@ -10,7 +10,6 @@ function calcularIdade(dataNasc) {
     const hoje = new Date();
     const nascimento = new Date(dataNasc);
     
-    // CORREÇÃO FUSO HORÁRIO: Garante que a data seja tratada no fuso local
     nascimento.setMinutes(nascimento.getMinutes() + nascimento.getTimezoneOffset());
 
     let idade = hoje.getFullYear() - nascimento.getFullYear();
@@ -23,7 +22,6 @@ function calcularIdade(dataNasc) {
 }
 
 function validarCPF(cpf) {
-    // ... seu código de CPF atual está perfeito aqui ...
     var Soma = 0; var Resto;
     var strCPF = String(cpf).replace(/[^\d]/g, '');
     if (strCPF.length !== 11) return false;
@@ -56,7 +54,6 @@ if (formularioCadastro) {
     formularioCadastro.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // Pegando valores e tratando possíveis nulos (Blindagem)
         const senha = document.getElementById('passwordCadastro')?.value || '';
         const confirma = document.getElementById('confirmarSenhaCadastro')?.value || '';
         const data_nascimento = document.getElementById('dataNascimentoCadastro')?.value || '';
@@ -68,7 +65,6 @@ if (formularioCadastro) {
         if(mensagem) mensagem.style.display = 'none';
         if(mensagem2) mensagem2.style.display = 'none';
 
-        // Validação Nome
         const regexNome = /^[A-Za-zÀ-ÿ\s]{3,}$/;
         if (!regexNome.test(nome)) {
             mensagem.textContent = "Nome inválido.";
@@ -76,7 +72,6 @@ if (formularioCadastro) {
             return;
         }
 
-        // Validação Data (Usando a ferramenta do topo)
         const idade = calcularIdade(data_nascimento);
         if (!data_nascimento || idade < 0) {
             mensagem.textContent = "Data de nascimento inválida.";
@@ -94,7 +89,6 @@ if (formularioCadastro) {
             return;
         }
 
-        // Validação CPF, Telefone e Senha (Seu código original continua aqui...)
         if (!validarCPF(cpf)) {
             mensagem.textContent = "CPF inválido.";
             mensagem.style.display = 'block';
@@ -118,8 +112,6 @@ if (formularioCadastro) {
             return;
         }
 
-        // Envio para o servidor
-        // PARA:
         try {
             const resposta = await fetch("http://localhost:8000/cadastrar", {
                 method: "POST",
@@ -152,7 +144,6 @@ if (formularioCadastro) {
 }
 
 // LOGIN
-
 if (formularioLogin) {
     formularioLogin.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -177,7 +168,7 @@ if (formularioLogin) {
             const resposta = await fetch("http://localhost:8000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password: senha })
+                body: JSON.stringify({ email: email, password: senha }) // FIX AQUI
             });
 
             const resultado = await resposta.json();
