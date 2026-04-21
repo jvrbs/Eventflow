@@ -218,13 +218,12 @@ body {
 .event-local { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
 
 /* ── Rodapé do card (Ajustado) ── */
-.card-footer { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-top: 15px; 
-    padding: 15px 24px 20px; /* Adicionei 24px nas laterais e 20px no fundo */
-    border-top: 1px solid #eee; 
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* Garante um espaço mínimo entre o texto e o botão */
+    padding: 15px 20px;
 }
 
 .vagas-label {
@@ -330,6 +329,9 @@ body {
     outline: none;
     box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
     transition: all 0.3s ease;
+    white-space: nowrap; /* Impede que o texto "Inscrever-se" quebre linha */
+    min-width: fit-content; /* Garante que o botão tenha o tamanho do texto */
+    padding: 10px 16px; /* Reduzimos um pouco o padding lateral */
 }
 
 .btn-ticket:hover {
