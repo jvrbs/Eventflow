@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EventFlow - Sua jornada para eventos</title>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
     <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
     <link rel="stylesheet" href="home.css">
+
 </head>
 <body>
 
@@ -34,9 +39,13 @@
             <div class="hero-text">
                 <h1>O FLUXO DOS <span class="destaque">MELHORES</span> EVENTOS</h1>
                 <p>Descubra experiências únicas e garanta seu lugar nos eventos mais exclusivos.</p>
+<<<<<<< HEAD
                 <button class="btn-explorar" onclick="document.querySelector('.events-container').scrollIntoView({behavior:'smooth'})">
                     Explorar Agora
                 </button>
+=======
+                <button class="btn-explorar">Explorar Agora</button>
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
             </div>
         </section>
 
@@ -45,6 +54,7 @@
                 <h2 class="titulo-sessao">Próximos Eventos</h2>
 
                 <div class="search-filter-group">
+<<<<<<< HEAD
                     <input
                         type="text"
                         id="campoBusca"
@@ -58,10 +68,26 @@
                         <button class="filter-btn" data-categoria="Teatro">Teatro</button>
                         <button class="filter-btn" data-categoria="Esportes">Esportes</button>
                         <button class="filter-btn" data-categoria="Tecnologia">Tecnologia</button>
+=======
+                    <input type="text" placeholder="Buscar evento..." class="input-busca-inline">
+
+                    <div class="filters-inline">
+                        <button class="filter-btn active">Tudo</button>
+                        <button class="filter-btn">Música</button>
+                        <button class="filter-btn">Teatro</button>
+                        <button class="filter-btn">Tecnologia</button>
+                        <button class="filter-btn">Esportes</button>
+                        <button class="filter-btn">Arte</button>
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
                     </div>
+
+                    <a href="criar-evento/criar-evento.html" class="btn-criar-evento" id="btnCriarEvento">
+                        + Criar Evento
+                    </a>
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div id="msgErroHome" style="display:none; color:#d32f2f; background:#ffebee; border:1px solid #ffcdd2; padding:14px 18px; border-radius:12px; margin-bottom:20px; font-weight:500;"></div>
 
             <div class="events-grid" id="eventsGrid"></div>
@@ -70,6 +96,34 @@
                 <div style="font-size:3.5rem; opacity:0.35; margin-bottom:16px;">🎭</div>
                 <h3 style="color:#212529; margin-bottom:8px;">Nenhum evento encontrado</h3>
                 <p style="color:#6C757D;">Tente outro filtro ou volte mais tarde.</p>
+=======
+            <!-- Skeleton inicial enquanto a API carrega -->
+            <div class="events-grid" id="eventsGrid">
+                <div class="skeleton-card">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-thumb"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line short"></div>
+                        <div class="skeleton-line medium"></div>
+                        <div class="skeleton-line short"></div>
+                    </div>
+                </div>
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
             </div>
         </section>
     </main>

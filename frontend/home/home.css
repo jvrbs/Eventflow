@@ -19,7 +19,7 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     line-height: 1.6;
-    overflow-x: hidden; /* Evita scroll horizontal indesejado */
+    overflow-x: hidden;
 }
 
 /* 2. HEADER (PÍLULA EXPANSÍVEL) */
@@ -207,54 +207,126 @@ body {
 .event-card:hover { transform: translateY(-10px); }
 .card-thumb { height: 180px; background-size: cover; background-position: center; padding: 15px; }
 .tag { background: var(--secondary-orange); color: var(--white); padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; }
-.card-body { padding: 20px; }
+.card-body { padding: 20px 24px; }
 .event-date { color: var(--secondary-orange); font-weight: bold; margin-bottom: 5px; display: block; }
 .event-local { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
-.card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
-.price { font-size: 1.1rem; font-weight: bold; }
-.btn-ticket { background: var(--primary-purple); color: var(--white); border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 600; }
 
-.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1000; display: none; }
-.overlay.active { display: block; }
-
-/* ===========================================
-   6. RESPONSIVIDADE (MEDIA QUERIES) 
-   =========================================== */
-
-@media (max-width: 768px) {
-    /* Header Pílula no Mobile */
-    .header-eventflow.expandido {
-        width: calc(100% - 40px); /* Ocupa quase a largura toda */
-    }
-
-    .menu-horizontal-links { gap: 12px; }
-    .menu-horizontal-links a { font-size: 0.85rem; }
-
-    /* Banner Hero */
-    .hero-section {
-        height: auto;
-        padding: 40px 25px;
-        text-align: center;
-        flex-direction: column;
-    }
-
-    .hero-text h1 { font-size: 1.8rem; }
-    
-    /* Filtros e Busca */
-    .section-header { flex-direction: column; align-items: flex-start; }
-    .search-filter-group { width: 100%; flex-direction: column; align-items: flex-start; }
-    .input-busca-inline { width: 100%; }
-    .input-busca-inline:focus { width: 100%; }
-    .filters-inline { width: 100%; overflow-x: auto; padding-bottom: 10px; }
+/* ── Rodapé do card (Ajustado) ── */
+.card-footer { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 15px; 
+    padding: 15px 24px 20px; /* Adicionei 24px nas laterais e 20px no fundo */
+    border-top: 1px solid #eee; 
 }
 
-@media (max-width: 480px) {
-    .header-eventflow { padding: 0 15px; }
-    .header-eventflow.expandido .menu-horizontal-links { margin: 0 15px; gap: 10px; }
-    .img-logo { height: 22px; }
+.vagas-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-left: 0; /* Garante que não haja recuo negativo */
+}
 
+<<<<<<< HEAD
     .events-grid { grid-template-columns: 1fr; } /* Um card por linha no celular pequeno */
     
     .hero-text h1 { font-size: 1.5rem; }
 }
 
+=======
+.btn-gerenciar {
+    margin-right: 0; /* Garante que não haja recuo negativo */
+    background: var(--secondary-orange) !important;
+    color: #fff !important;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+    outline: none !important;
+    border: none !important;
+}
+
+
+.btn-gerenciar:hover { 
+    filter: brightness(1.1); 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 107, 0, 0.3);
+}
+
+/* Outros elementos */
+.event-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 4px 0 0;
+    line-height: 1.3;
+}
+
+.tag-cancelado, .tag-lotado {
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.tag-cancelado { background: #fce8e6; color: #d32f2f; }
+.tag-lotado    { background: #fff3e0; color: #e65100; }
+
+.btn-criar-evento {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--secondary-orange);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 25px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.btn-criar-evento:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+/* Skeletons e Animações */
+.skeleton-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.skeleton-thumb {
+    height: 180px;
+    background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+}
+
+.skeleton-body { padding: 20px; }
+
+.skeleton-line {
+    height: 14px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@media (max-width: 768px) {
+    .header-eventflow.expandido { width: calc(100% - 40px); }
+    .hero-section { height: auto; padding: 40px 25px; text-align: center; }
+    .section-header { flex-direction: column; align-items: flex-start; }
+    .search-filter-group { width: 100%; }
+    .input-busca-inline { width: 100%; }
+}
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769

@@ -26,7 +26,11 @@ class UsuarioAtualizacao(BaseModel):
 # ── Evento ─────────────────────────────────────────────────────────────────────
 
 class EventoCriar(BaseModel):
+<<<<<<< HEAD
     usuario_id: int          # quem está criando — substituído por JWT na Sprint 2
+=======
+    usuario_id: int
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
     nome: str
     descricao: str | None = None
     data_hora: datetime
@@ -50,7 +54,11 @@ class EventoCriar(BaseModel):
 
 
 class EventoAtualizar(BaseModel):
+<<<<<<< HEAD
     usuario_id: int          # quem está editando — substituído por JWT na Sprint 2
+=======
+    usuario_id: int
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
     nome: str
     descricao: str | None = None
     data_hora: datetime
@@ -74,18 +82,27 @@ class EventoAtualizar(BaseModel):
 
 
 class EventoCancelar(BaseModel):
+<<<<<<< HEAD
     usuario_id: int          # quem está cancelando — substituído por JWT na Sprint 2
 
 
     ## Cole este trecho dentro de models.py, após a classe EventoCancelar
+=======
+    usuario_id: int
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
 
 
 # ── Inscrição ──────────────────────────────────────────────────────────────────
 
 class InscricaoCriar(BaseModel):
+<<<<<<< HEAD
     usuario_id: int   # quem está se inscrevendo — substituído por JWT na Sprint 2
     evento_id:  int
 
 
 class InscricaoCancelar(BaseModel):
     usuario_id: int   # quem está cancelando — substituído por JWT na Sprint 2
+=======
+    usuario_id: int
+    evento_id: int
+>>>>>>> 9d03a2bc07b150d266542ccebeb10c04f6081769
