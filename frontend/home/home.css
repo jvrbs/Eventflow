@@ -310,6 +310,66 @@ body {
     margin-bottom: 12px;
 }
 
+/* ── ESTILOS PARA BOTÕES DE INSCRIÇÃO ── */
+
+.btn-ticket {
+    background: var(--secondary-orange);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-ticket:hover {
+    background: #E55A00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 107, 0, 0.35);
+}
+
+.btn-ticket:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.25);
+}
+
+.btn-ticket:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Botão de inscrição específico */
+.btn-inscrever {
+    background: linear-gradient(135deg, var(--secondary-orange) 0%, #E55A00 100%);
+}
+
+.btn-inscrever:hover {
+    background: linear-gradient(135deg, #E55A00 0%, #CC4D00 100%);
+}
+
+/* Botão de cancelamento de inscrição */
+.btn-cancelar-inscricao {
+    background: #dc3545;
+}
+
+.btn-cancelar-inscricao:hover {
+    background: #c82333;
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.35);
+}
+
+/* Rótulo de inscrição ativa */
+.inscrito-label {
+    color: #28a745 !important;
+    font-weight: 700 !important;
+}
+
 @keyframes shimmer {
     0%   { background-position: 200% 0; }
     100% { background-position: -200% 0; }

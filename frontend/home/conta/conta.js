@@ -50,7 +50,7 @@ document.getElementById('btnFinalExcluir')?.addEventListener('click', async () =
     const usuarioLogado = JSON.parse(localStorage.getItem('usuario'));
     if (!usuarioLogado || !usuarioLogado.id) {
         fecharModal();
-        logout('../../inicial/index.html');
+        logout('../../login/login.html');
         return;
     }
 
@@ -71,8 +71,9 @@ document.getElementById('btnFinalExcluir')?.addEventListener('click', async () =
             return;
         }
 
-        localStorage.removeItem('usuario');
-        window.location.href = '../../inicial/index.html';
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '../../login/login.html';
 
     } catch (erro) {
         const msgErro = document.querySelector('.modal-content p');

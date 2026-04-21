@@ -33,45 +33,6 @@ from database import (
 import bcrypt
 import re
 from datetime import date, datetime
-import os
-
-app = FastAPI()
-
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from models import (
-    UsuarioCadastro, UsuarioLogin, UsuarioAtualizacao,
-    EventoCriar, EventoAtualizar, EventoCancelar,
-    InscricaoCriar,
-)
-from database import (
-    # usuário
-    procura_usuario_por_email,
-    procura_usuario_por_cpf,
-    procura_usuario_por_id,
-    cadastra_usuario,
-    verifica_senha_usuario,
-    validar_cpf,
-    atualiza_usuario_db,
-    deleta_usuario_db,
-    # evento
-    lista_eventos_ativos,
-    busca_evento_por_id,
-    cria_evento_db,
-    atualiza_evento_db,
-    cancela_evento_db,
-    # inscrição
-    conta_inscritos_ativos,
-    busca_inscricao_por_usuario_evento,
-    busca_inscricao_por_id,
-    cria_inscricao_db,
-    reativa_inscricao_db,
-    cancela_inscricao_db,
-    lista_inscricoes_por_usuario,
-)
-import bcrypt
-import re
-from datetime import date, datetime
 
 app = FastAPI()
 

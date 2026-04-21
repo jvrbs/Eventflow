@@ -182,6 +182,7 @@ if (formularioLogin) {
 // --- 5. FUNÇÃO DE LOGOUT ---
 
 function logout() {
-    localStorage.removeItem('usuario');
-    window.location.href = "../../inicial/index.html";
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "./login/login.html";
 }
