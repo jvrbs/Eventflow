@@ -1,15 +1,19 @@
-// --- FUNÇÕES AUXILIARES (As ferramentas do topo) ---
+// --- 1. CONFIGURAÇÃO E FUNÇÕES AUXILIARES ---
 
+const API_URL = "http://localhost:8000";
+
+// Remove caracteres não numéricos (útil para CPF e Telefone)
 function limparNumero(valor) {
     return valor.replace(/\D/g, '');
 }
 
-// TAREFA PESSOA 2: Função de idade precisa e acessível
+// TAREFA PESSOA 2: Função de idade com correção de fuso horário
 function calcularIdade(dataNasc) {
     if (!dataNasc) return -1;
     const hoje = new Date();
     const nascimento = new Date(dataNasc);
     
+    // Ajuste para evitar erro de fuso horário no JavaScript
     nascimento.setMinutes(nascimento.getMinutes() + nascimento.getTimezoneOffset());
 
     let idade = hoje.getFullYear() - nascimento.getFullYear();
@@ -21,99 +25,76 @@ function calcularIdade(dataNasc) {
     return idade;
 }
 
+// Validação de CPF (Regra de negócio do backend)
 function validarCPF(cpf) {
-    var Soma = 0; var Resto;
-    var strCPF = String(cpf).replace(/[^\d]/g, '');
-    if (strCPF.length !== 11) return false;
-    if (['00000000000','11111111111','22222222222','33333333333','44444444444','55555555555','66666666666','77777777777','88888888888','99999999999'].indexOf(strCPF) !== -1) return false;
-    for (var i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-    Resto = (Soma * 10) % 11;
-    if ((Resto == 10) || (Resto == 11)) Resto = 0;
-    if (Resto != parseInt(strCPF.substring(9, 10))) return false;
-    Soma = 0;
-    for (var i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-    Resto = (Soma * 10) % 11;
-    if ((Resto == 10) || (Resto == 11)) Resto = 0;
-    if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+    const strCPF = limparNumero(cpf);
+    if (strCPF.length !== 11 || /^(\d)\1{10}$/.test(strCPF)) return false;
+    
+    for (let j = 9; j <= 10; j++) {
+        let soma = 0;
+        for (let i = 0; i < j; i++) soma += parseInt(strCPF.charAt(i)) * ((j + 1) - i);
+        let resto = (soma * 10) % 11;
+        if (resto === 10 || resto === 11) resto = 0;
+        if (resto !== parseInt(strCPF.charAt(j))) return false;
+    }
     return true;
 }
 
-function validarTelefone(tel) {
-    const numero = limparNumero(tel);
-    return numero.length >= 10 && numero.length <= 11;
-}
+// --- 2. ELEMENTOS DO DOM ---
 
-// --- ELEMENTOS DO DOM ---
 const formularioCadastro = document.getElementById('formCadastro');
 const formularioLogin = document.getElementById('formLogin');
-const mensagem = document.getElementById('mensagem');
-const mensagem2 = document.getElementById('mensagem2');
+const msgGeral = document.getElementById('mensagem');    // Span para erros gerais
+const msgSenha = document.getElementById('mensagem2');   // Span para senha fraca
+const msgLogin = document.getElementById('mensagem3');   // Span para erro de login
 
-// --- CADASTRO ---
+// --- 3. LÓGICA DE CADASTRO ---
+
 if (formularioCadastro) {
     formularioCadastro.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const senha = document.getElementById('passwordCadastro')?.value || '';
-        const confirma = document.getElementById('confirmarSenhaCadastro')?.value || '';
-        const data_nascimento = document.getElementById('dataNascimentoCadastro')?.value || '';
         const nome = document.getElementById('nomeCompletocadastro')?.value.trim() || '';
         const email = document.getElementById('emailCadastro')?.value.trim() || '';
+        const data_nascimento = document.getElementById('dataNascimentoCadastro')?.value || '';
         const cpf = limparNumero(document.getElementById('cpfCadastro')?.value || '');
         const telefone = limparNumero(document.getElementById('telefoneCadastro')?.value || '');
+        const senha = document.getElementById('passwordCadastro')?.value || '';
+        const confirma = document.getElementById('confirmarSenhaCadastro')?.value || '';
 
-        if(mensagem) mensagem.style.display = 'none';
-        if(mensagem2) mensagem2.style.display = 'none';
+        // Limpa mensagens anteriores
+        if (msgGeral) msgGeral.style.display = 'none';
+        if (msgSenha) msgSenha.style.display = 'none';
 
-        const regexNome = /^[A-Za-zÀ-ÿ\s]{3,}$/;
-        if (!regexNome.test(nome)) {
-            mensagem.textContent = "Nome inválido.";
-            mensagem.style.display = 'block';
+        // Validações de Frontend
+        if (nome.length < 3) {
+            msgGeral.textContent = "Nome inválido (mínimo 3 caracteres).";
+            msgGeral.style.display = 'block';
             return;
         }
 
         const idade = calcularIdade(data_nascimento);
-        if (!data_nascimento || idade < 0) {
-            mensagem.textContent = "Data de nascimento inválida.";
-            mensagem.style.display = 'block';
-            return;
-        }
-        if (idade < 12) {
-            mensagem.textContent = "Você deve ter pelo menos 12 anos.";
-            mensagem.style.display = 'block';
-            return;
-        }
-        if (idade > 100) {
-            mensagem.textContent = "Data de nascimento inválida (máximo 100 anos).";
-            mensagem.style.display = 'block';
+        if (idade < 12 || idade > 100) {
+            msgGeral.textContent = "Idade permitida: entre 12 e 100 anos.";
+            msgGeral.style.display = 'block';
             return;
         }
 
         if (!validarCPF(cpf)) {
-            mensagem.textContent = "CPF inválido.";
-            mensagem.style.display = 'block';
+            msgGeral.textContent = "CPF inválido.";
+            msgGeral.style.display = 'block';
             return;
         }
-        if (!validarTelefone(telefone)) {
-            mensagem.textContent = "Telefone inválido.";
-            mensagem.style.display = 'block';
-            return;
-        }
+
         if (senha !== confirma) {
-            mensagem.textContent = "As senhas não coincidem.";
-            mensagem.style.display = 'block';
+            msgGeral.textContent = "As senhas não coincidem.";
+            msgGeral.style.display = 'block';
             return;
         }
 
-        const regexSenha = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
-        if (!regexSenha.test(senha)) {
-            mensagem2.textContent = "Senha fraca.";
-            mensagem2.style.display = 'block';
-            return;
-        }
-
+        // Envio para API FastAPI
         try {
-            const resposta = await fetch("http://localhost:8000/cadastrar", {
+            const resposta = await fetch(`${API_URL}/cadastrar`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -129,35 +110,36 @@ if (formularioCadastro) {
             const resultado = await resposta.json();
 
             if (!resposta.ok) {
-                mensagem.textContent = resultado.detail || "Erro ao cadastrar.";
-                mensagem.style.display = 'block';
+                msgGeral.textContent = resultado.detail || "Erro ao cadastrar.";
+                msgGeral.style.display = 'block';
                 return;
             }
 
+            // Sucesso: Redireciona para login
             window.location.href = "../login/login.html";
 
         } catch (erro) {
-            mensagem.textContent = "Erro ao conectar com o servidor.";
-            mensagem.style.display = 'block';
+            msgGeral.textContent = "Erro ao conectar com o servidor.";
+            msgGeral.style.display = 'block';
         }
     });
 }
 
-// LOGIN
+// --- 4. LÓGICA DE LOGIN (INTEGRADO COM PERFIL) ---
+
 if (formularioLogin) {
     formularioLogin.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const email = document.getElementById('emailLogin').value.trim();
         const senha = document.getElementById('passwordLogin').value.trim();
-        const mensagem3 = document.getElementById('mensagem3');
         const botao = formularioLogin.querySelector('button');
 
-        if(mensagem3) mensagem3.style.display = 'none';
+        if (msgLogin) msgLogin.style.display = 'none';
 
         if (!email || !senha) {
-            mensagem3.textContent = "Preencha todos os campos.";
-            mensagem3.style.display = 'block';
+            msgLogin.textContent = "Preencha todos os campos.";
+            msgLogin.style.display = 'block';
             return;
         }
 
@@ -165,32 +147,41 @@ if (formularioLogin) {
         botao.textContent = "Entrando...";
 
         try {
-            const resposta = await fetch("http://localhost:8000/login", {
+            const resposta = await fetch(`${API_URL}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email, password: senha }) // FIX AQUI
+                body: JSON.stringify({ email, password: senha })
             });
 
             const resultado = await resposta.json();
 
             if (!resposta.ok) {
-                mensagem3.textContent = resultado.detail || "Email ou senha incorretos.";
-                mensagem3.style.display = 'block';
+                msgLogin.textContent = resultado.detail || "Email ou senha incorretos.";
+                msgLogin.style.display = 'block';
                 return;
             }
 
-            if (resultado.token) localStorage.setItem('token', resultado.token);
+            // REGRAS DO PROMPT: Salvar usuário e definir fluxo por perfil
             localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
+
+            // Redirecionamento unificado (a home tratará o que exibir via JS)
             window.location.href = "../home/home.html";
 
         } catch (erro) {
-            if(mensagem3) {
-                mensagem3.textContent = "Erro ao fazer login.";
-                mensagem3.style.display = 'block';
+            if (msgLogin) {
+                msgLogin.textContent = "Erro ao conectar com o servidor.";
+                msgLogin.style.display = 'block';
             }
         } finally {
             botao.disabled = false;
             botao.textContent = "Entrar";
         }
     });
+}
+
+// --- 5. FUNÇÃO DE LOGOUT ---
+
+function logout() {
+    localStorage.removeItem('usuario');
+    window.location.href = "../../inicial/index.html";
 }
