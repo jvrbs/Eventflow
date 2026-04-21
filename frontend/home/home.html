@@ -14,7 +14,8 @@
             <img src="../img/Logo texto solo.png" alt="Logo EventFlow" class="img-logo">
         </div>
         <nav class="menu-horizontal-links" id="menuLinks">
-            <a href="criar-evento.html" style="color: var(--secondary-orange); font-weight: 800;">+ Criar Evento</a>
+            <!-- Link de criar evento: injetado pelo JS só para organizadores -->
+            <span id="linkCriarEvento"></span>
             <a href="conta/conta.html">Conta</a>
             <a href="#">Ingressos</a>
             <a href="#" onclick="logout()">Sair</a>
@@ -63,8 +64,7 @@
 
             <div id="msgErroHome" style="display:none; color:#d32f2f; background:#ffebee; border:1px solid #ffcdd2; padding:14px 18px; border-radius:12px; margin-bottom:20px; font-weight:500;"></div>
 
-            <div class="events-grid" id="eventsGrid">
-                </div>
+            <div class="events-grid" id="eventsGrid"></div>
 
             <div id="estadoVazio" style="display:none; text-align:center; padding:60px 20px;">
                 <div style="font-size:3.5rem; opacity:0.35; margin-bottom:16px;">🎭</div>

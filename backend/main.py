@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from models import (
     UsuarioCadastro, UsuarioLogin, UsuarioAtualizacao,
-    EventoCriar, EventoAtualizar, EventoCancelar,
+    EventoCriar, EventoAtualizar, EventoCancelar, InscricaoCriar, InscricaoCancelar,
 )
 from database import (
     procura_usuario_por_email,
@@ -18,7 +18,13 @@ from database import (
     cria_evento_db,
     atualiza_evento_db,
     cancela_evento_db,
-)
+    conta_inscritos_ativos,              
+    busca_inscricao_ativa,               
+    busca_inscricao_por_id,              
+    lista_inscricoes_por_usuario,        
+    cria_inscricao_db,                   
+    cancela_inscricao_db,
+    )
 import bcrypt
 import re
 from datetime import date, datetime
@@ -249,3 +255,91 @@ def cancelar_evento(evento_id: int, dados: EventoCancelar):
     cancela_evento_db(evento_id)
 
     return {"mensagem": "Evento cancelado com sucesso."}
+
+
+
+# ---------------- INSCRIÇÕES ----------------
+ 
+@app.post("/inscricoes", status_code=201)
+def inscrever(dados: InscricaoCriar):
+    """
+    Participante se inscreve em um evento.
+ 
+    Regras:
+    - Apenas usuários com perfil 'participante' podem se inscrever.
+    - O evento precisa existir e estar com status 'ativo'.
+    - Não pode haver inscrição ativa prévia do mesmo usuário no mesmo evento.
+    - A inscrição é bloqueada quando inscrições ativas >= capacidade do evento.
+    """
+ 
+    # 1. Valida participante
+    usuario = procura_usuario_por_id(dados.usuario_id)
+    if not usuario:
+        raise HTTPException(404, "Usuário não encontrado.")
+    if usuario["perfil"] != "participante":
+        raise HTTPException(403, "Apenas participantes podem se inscrever em eventos.")
+ 
+    # 2. Valida evento
+    evento = busca_evento_por_id(dados.evento_id)
+    if not evento:
+        raise HTTPException(404, "Evento não encontrado.")
+    if evento["status"] != "ativo":
+        raise HTTPException(400, "Inscrições disponíveis somente em eventos ativos.")
+ 
+    # 3. Verifica inscrição duplicada
+    if busca_inscricao_ativa(dados.usuario_id, dados.evento_id):
+        raise HTTPException(409, "Você já está inscrito neste evento.")
+ 
+    # 4. Controle de vagas
+    inscritos = conta_inscritos_ativos(dados.evento_id)
+    if inscritos >= evento["capacidade"]:
+        raise HTTPException(409, "Evento esgotado. Não há vagas disponíveis.")
+ 
+    # 5. Cria inscrição
+    inscricao_id = cria_inscricao_db(dados.usuario_id, dados.evento_id)
+ 
+    return {
+        "mensagem": "Inscrição realizada com sucesso!",
+        "inscricao_id": inscricao_id,
+        "vagas_restantes": evento["capacidade"] - inscritos - 1,
+    }
+ 
+ 
+@app.delete("/inscricoes/{inscricao_id}")
+def cancelar_inscricao(inscricao_id: int, dados: InscricaoCancelar):
+    """
+    Participante cancela a própria inscrição.
+ 
+    Regras:
+    - A inscrição precisa existir e estar ativa.
+    - Apenas o próprio participante pode cancelar (dados.usuario_id == inscricao.usuario_id).
+    """
+ 
+    inscricao = busca_inscricao_por_id(inscricao_id)
+ 
+    if not inscricao:
+        raise HTTPException(404, "Inscrição não encontrada.")
+ 
+    if inscricao["status"] != "ativa":
+        raise HTTPException(409, "Esta inscrição já foi cancelada.")
+ 
+    if inscricao["usuario_id"] != dados.usuario_id:
+        raise HTTPException(403, "Sem permissão para cancelar esta inscrição.")
+ 
+    cancela_inscricao_db(inscricao_id)
+ 
+    return {"mensagem": "Inscrição cancelada com sucesso."}
+ 
+ 
+@app.get("/inscricoes/usuario/{usuario_id}")
+def listar_inscricoes_usuario(usuario_id: int):
+    """
+    Lista todas as inscrições ATIVAS do participante, com dados do evento.
+    """
+ 
+    usuario = procura_usuario_por_id(usuario_id)
+    if not usuario:
+        raise HTTPException(404, "Usuário não encontrado.")
+ 
+    inscricoes = lista_inscricoes_por_usuario(usuario_id)
+    return inscricoes

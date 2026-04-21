@@ -75,3 +75,17 @@ class EventoAtualizar(BaseModel):
 
 class EventoCancelar(BaseModel):
     usuario_id: int          # quem está cancelando — substituído por JWT na Sprint 2
+
+
+    ## Cole este trecho dentro de models.py, após a classe EventoCancelar
+
+
+# ── Inscrição ──────────────────────────────────────────────────────────────────
+
+class InscricaoCriar(BaseModel):
+    usuario_id: int   # quem está se inscrevendo — substituído por JWT na Sprint 2
+    evento_id:  int
+
+
+class InscricaoCancelar(BaseModel):
+    usuario_id: int   # quem está cancelando — substituído por JWT na Sprint 2

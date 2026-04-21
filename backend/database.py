@@ -225,3 +225,141 @@ def cancela_evento_db(evento_id: int):
     except mysql.connector.Error as err:
         print(f"Erro ao cancelar evento: {err}")
         raise
+
+
+
+# ── Inscrição — buscas ─────────────────────────────────────────────────────────
+
+def conta_inscritos_ativos(evento_id: int) -> int:
+    """Retorna quantas inscrições ativas existem para um evento."""
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT COUNT(*) FROM inscricao WHERE evento_id = %s AND status = 'ativa'",
+            (evento_id,)
+        )
+        total = cursor.fetchone()[0]
+        cursor.close()
+        conn.close()
+        return total
+    except mysql.connector.Error as err:
+        print(f"Erro ao contar inscritos: {err}")
+        return 0
+
+
+def busca_inscricao_ativa(usuario_id: int, evento_id: int):
+    """Retorna a inscrição ativa do usuário no evento, ou None."""
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            """
+            SELECT * FROM inscricao
+            WHERE usuario_id = %s AND evento_id = %s AND status = 'ativa'
+            """,
+            (usuario_id, evento_id)
+        )
+        inscricao = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return inscricao
+    except mysql.connector.Error as err:
+        print(f"Erro ao buscar inscrição ativa: {err}")
+        return None
+
+
+def busca_inscricao_por_id(inscricao_id: int):
+    """Retorna qualquer inscrição pelo ID."""
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM inscricao WHERE id = %s", (inscricao_id,))
+        inscricao = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return inscricao
+    except mysql.connector.Error as err:
+        print(f"Erro ao buscar inscrição por ID: {err}")
+        return None
+
+
+def lista_inscricoes_por_usuario(usuario_id: int):
+    """
+    Retorna as inscrições ATIVAS do usuário com dados do evento via JOIN.
+    Ordena pelo próximo evento primeiro.
+    """
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(
+            """
+            SELECT
+                i.id            AS inscricao_id,
+                i.status        AS inscricao_status,
+                i.criado_em     AS inscrito_em,
+                e.id            AS evento_id,
+                e.nome          AS evento_nome,
+                e.descricao     AS evento_descricao,
+                e.data_hora     AS evento_data_hora,
+                e.local         AS evento_local,
+                e.capacidade    AS evento_capacidade,
+                e.categoria     AS evento_categoria,
+                e.status        AS evento_status
+            FROM inscricao i
+            INNER JOIN evento e ON e.id = i.evento_id
+            WHERE i.usuario_id = %s
+              AND i.status = 'ativa'
+            ORDER BY e.data_hora ASC
+            """,
+            (usuario_id,)
+        )
+        inscricoes = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return inscricoes
+    except mysql.connector.Error as err:
+        print(f"Erro ao listar inscrições do usuário: {err}")
+        return []
+
+
+# ── Inscrição — escrita ─────────────────────────────────────────────────────────
+
+def cria_inscricao_db(usuario_id: int, evento_id: int) -> int:
+    """
+    Insere uma inscrição ativa e retorna o ID gerado.
+    Lança exceção se a constraint UNIQUE for violada
+    (usuário já inscrito — tratado na rota).
+    """
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO inscricao (usuario_id, evento_id, status) VALUES (%s, %s, 'ativa')",
+            (usuario_id, evento_id)
+        )
+        conn.commit()
+        inscricao_id = cursor.lastrowid
+        cursor.close()
+        conn.close()
+        return inscricao_id
+    except mysql.connector.Error as err:
+        print(f"Erro ao criar inscrição: {err}")
+        raise
+
+
+def cancela_inscricao_db(inscricao_id: int):
+    """Muda o status da inscrição para 'cancelada'. Nunca deleta."""
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE inscricao SET status = 'cancelada' WHERE id = %s",
+            (inscricao_id,)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        print(f"Erro ao cancelar inscrição: {err}")
+        raise
