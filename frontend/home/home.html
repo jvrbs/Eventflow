@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventFlow - Sua jornada para eventos</title>    
-
+    <title>EventFlow - Sua jornada para eventos</title>
     <link rel="icon" type="image/png" href="../img/Logo eventflow.png">
     <link rel="stylesheet" href="home.css">
 </head>
@@ -14,13 +13,11 @@
         <div class="logo-area">
             <img src="../img/Logo texto solo.png" alt="Logo EventFlow" class="img-logo">
         </div>
-
         <nav class="menu-horizontal-links" id="menuLinks">
             <a href="conta/conta.html">Conta</a>
             <a href="#">Ingressos</a>
             <a href="#" onclick="logout()">Sair</a>
         </nav>
-
         <button class="menu-hamburguer" id="btnMenu">
             <span class="barrinha"></span>
             <span class="barrinha"></span>
@@ -34,32 +31,78 @@
         <section class="hero-section">
             <div class="hero-text">
                 <h1>O FLUXO DOS <span class="destaque">MELHORES</span> EVENTOS</h1>
-                <p>Descubra Experiências únicas e garanta seu lugar nos eventos mais exclusivos.</p>
-                <button class="btn-explorar">Explorar Agora</button>
+                <p>Descubra experiências únicas e garanta seu lugar nos eventos mais exclusivos.</p>
+                <button class="btn-explorar" onclick="document.querySelector('.events-container').scrollIntoView({behavior:'smooth'})">
+                    Explorar Agora
+                </button>
             </div>
         </section>
 
         <section class="events-container">
             <div class="section-header">
                 <h2 class="titulo-sessao">Próximos Eventos</h2>
-                
+
                 <div class="search-filter-group">
-                    <input type="text" placeholder="Buscar evento..." class="input-busca-inline">
-                    
-                    <div class="filters-inline">
-                        <button class="filter-btn active">Tudo</button>
-                        <button class="filter-btn">Música</button>
-                        <button class="filter-btn">Teatro</button>
+                    <input
+                        type="text"
+                        id="campoBusca"
+                        placeholder="Buscar evento..."
+                        class="input-busca-inline"
+                        autocomplete="off"
+                    >
+                    <div class="filters-inline" id="filtrosCategorias">
+                        <button class="filter-btn active" data-categoria="todos">Tudo</button>
+                        <button class="filter-btn" data-categoria="Música">Música</button>
+                        <button class="filter-btn" data-categoria="Teatro">Teatro</button>
+                        <button class="filter-btn" data-categoria="Esportes">Esportes</button>
+                        <button class="filter-btn" data-categoria="Tecnologia">Tecnologia</button>
                     </div>
                 </div>
             </div>
 
+            <!-- Mensagem de erro de carregamento -->
+            <div id="msgErroHome" style="display:none; color:#d32f2f; background:#ffebee; border:1px solid #ffcdd2; padding:14px 18px; border-radius:12px; margin-bottom:20px; font-weight:500;"></div>
 
+            <!-- Grade de eventos — preenchida pelo JS -->
+            <div class="events-grid" id="eventsGrid">
+                <!-- Skeletons enquanto carrega -->
+                <div class="event-card skeleton-card" aria-hidden="true">
+                    <div class="card-thumb" style="background:#e0e0e0;"></div>
+                    <div class="card-body">
+                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:40%;margin-bottom:10px;"></div>
+                        <div style="height:20px;background:#e0e0e0;border-radius:6px;width:80%;margin-bottom:8px;"></div>
+                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:60%;"></div>
+                    </div>
+                </div>
+                <div class="event-card skeleton-card" aria-hidden="true">
+                    <div class="card-thumb" style="background:#e8e8e8;"></div>
+                    <div class="card-body">
+                        <div style="height:14px;background:#e8e8e8;border-radius:6px;width:35%;margin-bottom:10px;"></div>
+                        <div style="height:20px;background:#e8e8e8;border-radius:6px;width:75%;margin-bottom:8px;"></div>
+                        <div style="height:14px;background:#e8e8e8;border-radius:6px;width:50%;"></div>
+                    </div>
+                </div>
+                <div class="event-card skeleton-card" aria-hidden="true">
+                    <div class="card-thumb" style="background:#e0e0e0;"></div>
+                    <div class="card-body">
+                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:45%;margin-bottom:10px;"></div>
+                        <div style="height:20px;background:#e0e0e0;border-radius:6px;width:70%;margin-bottom:8px;"></div>
+                        <div style="height:14px;background:#e0e0e0;border-radius:6px;width:55%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado vazio -->
+            <div id="estadoVazio" style="display:none; text-align:center; padding:60px 20px;">
+                <div style="font-size:3.5rem; opacity:0.35; margin-bottom:16px;">🎭</div>
+                <h3 style="color:#212529; margin-bottom:8px;">Nenhum evento encontrado</h3>
+                <p style="color:#6C757D;">Tente outro filtro ou volte mais tarde.</p>
+            </div>
         </section>
     </main>
 
-
     <script src="../session.js"></script>
     <script src="home.js"></script>
+    <script src="home-eventos.js"></script>
 </body>
 </html>
