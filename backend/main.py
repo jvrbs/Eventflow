@@ -1,24 +1,81 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from models import UsuarioCadastro, UsuarioLogin, UsuarioAtualizacao
+from models import (
+    UsuarioCadastro, UsuarioLogin, UsuarioAtualizacao,
+    EventoCriar, EventoAtualizar, EventoCancelar,
+    InscricaoCriar,
+)
 from database import (
+    # usuário
     procura_usuario_por_email,
     procura_usuario_por_cpf,
+    procura_usuario_por_id,
     cadastra_usuario,
     verifica_senha_usuario,
     validar_cpf,
     atualiza_usuario_db,
-    procura_usuario_por_id,   
-    deleta_usuario_db          
+    deleta_usuario_db,
+    # evento
+    lista_eventos_ativos,
+    busca_evento_por_id,
+    cria_evento_db,
+    atualiza_evento_db,
+    cancela_evento_db,
+    # inscrição
+    conta_inscritos_ativos,
+    busca_inscricao_por_usuario_evento,
+    busca_inscricao_por_id,
+    cria_inscricao_db,
+    reativa_inscricao_db,
+    cancela_inscricao_db,
+    lista_inscricoes_por_usuario,
 )
 import bcrypt
 import re
-from datetime import date
+from datetime import date, datetime
 import os
 
 app = FastAPI()
 
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from models import (
+    UsuarioCadastro, UsuarioLogin, UsuarioAtualizacao,
+    EventoCriar, EventoAtualizar, EventoCancelar,
+    InscricaoCriar,
+)
+from database import (
+    # usuário
+    procura_usuario_por_email,
+    procura_usuario_por_cpf,
+    procura_usuario_por_id,
+    cadastra_usuario,
+    verifica_senha_usuario,
+    validar_cpf,
+    atualiza_usuario_db,
+    deleta_usuario_db,
+    # evento
+    lista_eventos_ativos,
+    busca_evento_por_id,
+    cria_evento_db,
+    atualiza_evento_db,
+    cancela_evento_db,
+    # inscrição
+    conta_inscritos_ativos,
+    busca_inscricao_por_usuario_evento,
+    busca_inscricao_por_id,
+    cria_inscricao_db,
+    reativa_inscricao_db,
+    cancela_inscricao_db,
+    lista_inscricoes_por_usuario,
+)
+import bcrypt
+import re
+from datetime import date, datetime
+
+app = FastAPI()
+
+# ── CORS ───────────────────────────────────────────────────────────────────────
 
 origins = [
     "http://localhost:8000",
@@ -33,10 +90,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── Helpers internos ───────────────────────────────────────────────────────────
+
+def _exige_organizador(usuario_id: int):
+    usuario = procura_usuario_por_id(usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+    if usuario["perfil"] != "organizador":
+        raise HTTPException(status_code=403, detail="Apenas organizadores podem realizar esta ação.")
+    return usuario
+
+
+def _exige_dono_do_evento(evento_id: int, usuario_id: int):
+    _exige_organizador(usuario_id)
+    evento = busca_evento_por_id(evento_id)
+    if not evento:
+        raise HTTPException(status_code=404, detail="Evento não encontrado.")
+    if evento["organizador_id"] != usuario_id:
+        raise HTTPException(status_code=403, detail="Você não tem permissão para alterar este evento.")
+    return evento
+
+
+# ── Rota de teste ──────────────────────────────────────────────────────────────
+
 @app.get("/")
 def inicio():
     return {"mensagem": "EventFlow rodando!"}
 
+
+# ── Usuário ────────────────────────────────────────────────────────────────────
 
 @app.post("/cadastrar", status_code=201)
 def cadastro(dados: UsuarioCadastro):
@@ -62,25 +144,17 @@ def cadastro(dados: UsuarioCadastro):
         raise HTTPException(status_code=409, detail="Este CPF já está cadastrado no sistema.")
 
     senha_cripto = bcrypt.hashpw(
-        dados.password.encode('utf-8'),
-        bcrypt.gensalt()
+        dados.password.encode('utf-8'), bcrypt.gensalt()
     ).decode('utf-8')
 
-    cadastra_usuario(
-        dados.nome_completo,
-        dados.data_nascimento,
-        dados.email,
-        dados.cpf,
-        dados.telefone,
-        senha_cripto
-    )
+    cadastra_usuario(dados.nome_completo, dados.data_nascimento, dados.email,
+                     dados.cpf, dados.telefone, senha_cripto)
     return {"mensagem": "Usuário cadastrado com sucesso!"}
 
 
 @app.post("/login")
 def login(dados: UsuarioLogin):
     usuario = procura_usuario_por_email(dados.email)
-
     if not usuario or not verifica_senha_usuario(dados.password, usuario['senha_hash']):
         raise HTTPException(status_code=401, detail="Email ou senha incorretos.")
 
@@ -92,7 +166,8 @@ def login(dados: UsuarioLogin):
             "email": usuario['email'],
             "data_nascimento": str(usuario['data_nascimento']),
             "cpf": usuario['cpf'],
-            "telefone": usuario['telefone']
+            "telefone": usuario['telefone'],
+            "perfil": usuario['perfil'],
         }
     }
 
@@ -113,13 +188,8 @@ def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
     if usuario_existente and usuario_existente['id'] != usuario_id:
         raise HTTPException(status_code=409, detail="Este e-mail já está sendo usado por outra conta.")
 
-    atualiza_usuario_db(
-        usuario_id,
-        dados.nome_completo,
-        dados.email,
-        dados.telefone,
-        dados.data_nascimento
-    )
+    atualiza_usuario_db(usuario_id, dados.nome_completo, dados.email,
+                        dados.telefone, dados.data_nascimento)
     return {"mensagem": "Dados atualizados com sucesso!"}
 
 
@@ -127,6 +197,122 @@ def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
 def deletar_conta(usuario_id: int):
     if not procura_usuario_por_id(usuario_id):
         raise HTTPException(status_code=404, detail="Usuário não encontrado.")
-
     deleta_usuario_db(usuario_id)
     return {"mensagem": "Conta deletada com sucesso."}
+
+
+# ── Eventos ────────────────────────────────────────────────────────────────────
+
+@app.post("/eventos", status_code=201)
+def criar_evento(dados: EventoCriar):
+    _exige_organizador(dados.usuario_id)
+
+    if dados.data_hora <= datetime.now():
+        raise HTTPException(status_code=400, detail="A data do evento deve ser futura.")
+
+    evento_id = cria_evento_db(
+        dados.usuario_id, dados.nome, dados.descricao,
+        dados.data_hora, dados.local, dados.capacidade, dados.categoria,
+    )
+    return {"mensagem": "Evento criado com sucesso!", "evento_id": evento_id}
+
+
+@app.get("/eventos")
+def listar_eventos():
+    return lista_eventos_ativos()
+
+
+@app.get("/eventos/{evento_id}")
+def detalhe_evento(evento_id: int):
+    evento = busca_evento_por_id(evento_id)
+    if not evento:
+        raise HTTPException(status_code=404, detail="Evento não encontrado.")
+    return evento
+
+
+@app.put("/eventos/{evento_id}")
+def editar_evento(evento_id: int, dados: EventoAtualizar):
+    evento = _exige_dono_do_evento(evento_id, dados.usuario_id)
+
+    if evento["status"] == "cancelado":
+        raise HTTPException(status_code=400, detail="Não é possível editar um evento cancelado.")
+
+    if dados.data_hora <= datetime.now():
+        raise HTTPException(status_code=400, detail="A data do evento deve ser futura.")
+
+    atualiza_evento_db(
+        evento_id, dados.nome, dados.descricao,
+        dados.data_hora, dados.local, dados.capacidade, dados.categoria,
+    )
+    return {"mensagem": "Evento atualizado com sucesso!"}
+
+
+@app.patch("/eventos/{evento_id}/cancelar")
+def cancelar_evento(evento_id: int, dados: EventoCancelar):
+    evento = _exige_dono_do_evento(evento_id, dados.usuario_id)
+
+    if evento["status"] == "cancelado":
+        raise HTTPException(status_code=409, detail="Evento já está cancelado.")
+
+    cancela_evento_db(evento_id)
+    return {"mensagem": "Evento cancelado com sucesso."}
+
+
+# ── Inscrições ─────────────────────────────────────────────────────────────────
+
+@app.post("/inscricoes", status_code=201)
+def inscrever(dados: InscricaoCriar):
+    # Verifica se usuário existe
+    usuario = procura_usuario_por_id(dados.usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+
+    # Verifica se evento existe e está ativo
+    evento = busca_evento_por_id(dados.evento_id)
+    if not evento:
+        raise HTTPException(status_code=404, detail="Evento não encontrado.")
+    if evento["status"] == "cancelado":
+        raise HTTPException(status_code=400, detail="Não é possível se inscrever em um evento cancelado.")
+
+    # Verifica se já existe inscrição para esse par usuário+evento
+    inscricao_existente = busca_inscricao_por_usuario_evento(dados.usuario_id, dados.evento_id)
+
+    if inscricao_existente:
+        if inscricao_existente["status"] == "ativa":
+            raise HTTPException(status_code=409, detail="Você já está inscrito neste evento.")
+        # Se estava cancelada, reativa em vez de duplicar o registro
+        if conta_inscritos_ativos(dados.evento_id) >= evento["capacidade"]:
+            raise HTTPException(status_code=409, detail="Evento lotado. Não há vagas disponíveis.")
+        reativa_inscricao_db(inscricao_existente["id"])
+        return {"mensagem": "Inscrição reativada com sucesso!", "inscricao_id": inscricao_existente["id"]}
+
+    # Verifica vagas disponíveis
+    if conta_inscritos_ativos(dados.evento_id) >= evento["capacidade"]:
+        raise HTTPException(status_code=409, detail="Evento lotado. Não há vagas disponíveis.")
+
+    inscricao_id = cria_inscricao_db(dados.usuario_id, dados.evento_id)
+    return {"mensagem": "Inscrição realizada com sucesso!", "inscricao_id": inscricao_id}
+
+
+@app.delete("/inscricoes/{inscricao_id}")
+def cancelar_inscricao(inscricao_id: int, usuario_id: int):
+    inscricao = busca_inscricao_por_id(inscricao_id)
+    if not inscricao:
+        raise HTTPException(status_code=404, detail="Inscrição não encontrada.")
+
+    # Garante que o usuário só cancela a própria inscrição
+    if inscricao["usuario_id"] != usuario_id:
+        raise HTTPException(status_code=403, detail="Você não tem permissão para cancelar esta inscrição.")
+
+    if inscricao["status"] == "cancelada":
+        raise HTTPException(status_code=409, detail="Inscrição já está cancelada.")
+
+    cancela_inscricao_db(inscricao_id)
+    return {"mensagem": "Inscrição cancelada com sucesso."}
+
+
+@app.get("/inscricoes/usuario/{usuario_id}")
+def listar_inscricoes_usuario(usuario_id: int):
+    if not procura_usuario_por_id(usuario_id):
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+    return lista_inscricoes_por_usuario(usuario_id)
