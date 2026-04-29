@@ -13,26 +13,26 @@ body {
 
 /* 2. Wrapper Principal (Centralização Vertical/Horizontal) */
 .page-wrapper {
-    padding-top: 130px; /* Espaço para o Header Pílula não cobrir o título */
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Começa do topo com respiro */
-    padding-bottom: 60px;
+    align-items: center; /* Centraliza no desktop */
+    background-color: #F0F2F5;
+    padding: 20px; /* Respiro para o card não colar nas bordas */
 }
 
 .container-sm {
     width: 100%;
-    max-width: 650px; /* Tamanho ideal para formulários de leitura rápida */
-    padding: 0 20px;
+    max-width: 600px;
 }
 
 /* 3. O Card do Formulário (Visual Clean) */
 .card-form {
     background: #FFFFFF;
-    padding: 45px;
-    border-radius: 30px; /* Arredondamento suave como na Home */
+    padding: 40px;
+    border-radius: 30px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+    width: 100%;
 }
 
 .card-form h2 {
@@ -219,26 +219,64 @@ textarea {
     background: #d32f2f; color: #fff; font-weight: 700; cursor: pointer;
 }
 
-/* 7. Responsividade (Mobile) */
+/* --- RESPONSIVIDADE BLINDADA (RESOLVE VAZAMENTO DO BOTÃO) --- */
 @media (max-width: 600px) {
     .page-wrapper {
-        padding-top: 110px;
+        padding: 20px 10px !important; /* Respiro lateral na tela */
+        align-items: flex-start !important;
     }
-    
-    .form-grid {
-        grid-template-columns: 1fr; /* Coluna única no celular */
-    }
-    
-    .full-width {
-        grid-column: span 1;
-    }
-    
-    .form-actions {
-        flex-direction: column; /* Botões um em cima do outro */
-    }
-    
+
     .card-form {
-        padding: 30px 20px;
+        padding: 30px 15px !important; /* Respiro interno do card */
+        width: 100% !important;
+        box-sizing: border-box !important; /* Fundamental: impede o card de crescer além da tela */
+    }
+
+    .form-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    /* ── CORREÇÃO DOS BOTÕES ── */
+    .form-actions {
+        display: flex !important;
+        flex-direction: column !important; /* Um embaixo do outro */
+        gap: 12px !important;
+        width: 100% !important; /* Garante que a área de botões não vaze */
+        padding: 0 !important;
+        margin-top: 25px !important;
+    }
+
+    /* Estilo pílula para TODOS os botões, incluindo o link 'Voltar' */
+    .btn-primary, .btn-secondary, .btn-danger {
+        width: 100% !important; /* Ocupa 100% da largura do card */
+        height: 50px !important; /* Altura fixa para todos */
+        border-radius: 50px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important; /* Remove margens que podem empurrar para fora */
+        box-sizing: border-box !important;
+        font-size: 1rem !important;
+        text-decoration: none !important;
+    }
+
+    /* Cores específicas para manter a hierarquia visual */
+    .btn-primary { order: 1; background-color: #FF6B00 !important; }
+    
+    .btn-secondary { 
+        order: 2; 
+        background-color: #F0F2F5 !important; /* Cinza suave */
+        color: #6C757D !important; 
+        border: none !important;
+    }
+
+    .btn-danger { 
+        order: 3; 
+        margin-top: 10px !important; 
+        border: 2px solid #d32f2f !important;
+        color: #d32f2f !important;
+        background: transparent !important;
     }
 }
-

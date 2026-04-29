@@ -96,17 +96,23 @@ def atualiza_usuario_db(id, nome, email, telefone, data_nascimento):
         raise
 
 
-def deleta_usuario_db(usuario_id: int):
+def deleta_usuario_db(usuario_id):
+    conn = get_connection()
+    cursor = conn.cursor()
     try:
-        conn = get_connection()
-        cursor = conn.cursor()
+        # 1. Primeiro removemos as inscrições vinculadas a esse ID
+        cursor.execute("DELETE FROM inscricao WHERE usuario_id = %s", (usuario_id,))
+        
+        # 2. Agora sim, removemos o usuário
         cursor.execute("DELETE FROM usuario WHERE id = %s", (usuario_id,))
+        
         conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
         cursor.close()
         conn.close()
-    except mysql.connector.Error as err:
-        print(f"Erro ao deletar usuário: {err}")
-        raise
 
 
 def verifica_senha_usuario(senha, senha_hash):

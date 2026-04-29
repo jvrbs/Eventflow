@@ -11,7 +11,8 @@ function getUsuarioLogado(redirectSePath = '../login/login.html') {
 }
 
 // Clear session and redirect
-function logout(redirectPath = '../inicial/index.html') {
-    localStorage.removeItem('usuario');
+function logout(redirectPath = '../login/login.html') {
+    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = redirectPath;
 }

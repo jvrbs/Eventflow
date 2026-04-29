@@ -191,9 +191,10 @@ body {
 /* 5. GRID DE EVENTOS */
 .events-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    margin-bottom: 80px;
+    /* O minmax(280px...) garante que o card nunca fique pequeno demais nem gigante */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 25px;
+    width: 100%;
 }
 
 .event-card {
@@ -202,6 +203,11 @@ body {
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     transition: transform 0.3s ease;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .event-card:hover { transform: translateY(-10px); }
@@ -212,13 +218,12 @@ body {
 .event-local { color: var(--text-muted); font-size: 0.9rem; margin-top: 5px; }
 
 /* ── Rodapé do card (Ajustado) ── */
-.card-footer { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-top: 15px; 
-    padding: 15px 24px 20px; /* Adicionei 24px nas laterais e 20px no fundo */
-    border-top: 1px solid #eee; 
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* Garante um espaço mínimo entre o texto e o botão */
+    padding: 15px 20px;
 }
 
 .vagas-label {
@@ -310,15 +315,154 @@ body {
     margin-bottom: 12px;
 }
 
+/* ── ESTILOS PARA BOTÕES DE INSCRIÇÃO ── */
+
+.btn-ticket {
+    background: var(--secondary-orange);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Impede que o texto "Inscrever-se" quebre linha */
+    min-width: fit-content; /* Garante que o botão tenha o tamanho do texto */
+    padding: 10px 16px; /* Reduzimos um pouco o padding lateral */
+}
+
+.btn-ticket:hover {
+    background: #E55A00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 107, 0, 0.35);
+}
+
+.btn-ticket:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.25);
+}
+
+.btn-ticket:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Botão de inscrição específico */
+.btn-inscrever {
+    background: linear-gradient(135deg, var(--secondary-orange) 0%, #E55A00 100%);
+}
+
+.btn-inscrever:hover {
+    background: linear-gradient(135deg, #E55A00 0%, #CC4D00 100%);
+}
+
+/* Botão de cancelamento de inscrição */
+.btn-cancelar-inscricao {
+    background: #dc3545;
+}
+
+.btn-cancelar-inscricao:hover {
+    background: #c82333;
+    box-shadow: 0 6px 15px rgba(220, 53, 69, 0.35);
+}
+
+/* Rótulo de inscrição ativa */
+.inscrito-label {
+    color: #28a745 !important;
+    font-weight: 700 !important;
+}
+
 @keyframes shimmer {
     0%   { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
 
+/* --- RESPONSIVIDADE REAL (MANTENDO A PÍLULA) --- */
 @media (max-width: 768px) {
+<<<<<<< HEAD
     .header-eventflow.expandido { width: calc(100% - 40px); }
     .hero-section { height: auto; padding: 40px 25px; text-align: center; }
     .section-header { flex-direction: column; align-items: flex-start; }
     .search-filter-group { width: 100%; }
     .input-busca-inline { width: 100%; }
+=======
+    /* 1. Header: Mantém formato pílula, mas um pouco menor */
+    .header-eventflow {
+        width: 140px; /* Reduzi um pouco para não ocupar meia tela */
+        height: 50px; /* Altura um pouco menor para celular */
+        left: 10px;
+        top: 10px;
+        padding: 0 15px;
+    }
+
+    /* 2. Header Expandido no Mobile */
+    .header-eventflow.expandido {
+        width: calc(100% - 20px); /* Ocupa a largura quase toda */
+        border-radius: 50px; /* Mantém o arredondamento de pílula */
+    }
+
+    .img-logo {
+        height: 22px; /* Logo menor para caber na pílula mobile */
+    }
+
+    .menu-horizontal-links {
+        gap: 12px;
+        margin: 0 15px !important; /* Espaço para não colar na logo */
+    }
+
+    .menu-horizontal-links a {
+        font-size: 0.8rem; /* Fonte menor para caber os links lado a lado */
+    }
+
+    /* 3. Hero Section (Banner Principal) */
+    .hero-section {
+        height: auto;
+        min-height: 250px;
+        padding: 30px 20px;
+        margin: 0 15px 30px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .hero-text h1 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    /* 4. Filtros e Busca */
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 0 15px;
+    }
+
+    .search-filter-group {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .input-busca-inline {
+        width: 100% !important;
+    }
+
+    .filters-inline {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap; /* Botões de filtro descem se não couberem */
+    }
+}
+
+/* Ajuste para telas muito pequenas (iPhone SE) */
+@media (max-width: 380px) {
+    .events-grid {
+        grid-template-columns: 1fr; /* Força um card por linha em telas minúsculas */
+    }
+>>>>>>> 6d9826622946de2ed76e53441b6acf84e528e375
 }

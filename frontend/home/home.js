@@ -77,8 +77,9 @@ function renderizarCard(evento, inscricaoId, usuarioId, perfil) {
     } else if (estaLotado) {
         rodape = `<span class="tag-lotado">Lotado</span>`;
     } else {
+        const vagasExibir = evento.vagas_restantes ?? evento.capacidade;
         rodape = `
-            <span class="vagas-label">${evento.vagas_restantes ?? '?'} vagas</span>
+            <span class="vagas-label">${vagasExibir} vagas</span>
             <button class="btn-ticket btn-inscrever"
                     data-evento-id="${evento.id}"
                     data-usuario-id="${usuarioId}"
@@ -99,8 +100,7 @@ function renderizarCard(evento, inscricaoId, usuarioId, perfil) {
                 <p class="event-local">📍 ${evento.local}</p>
             </div>
             <div class="card-footer">
-                <span class="vagas-label">${evento.vagas_restantes} vagas</span>
-                <button class="btn-gerenciar" onclick="abrirGerenciar(${evento.id})">Gerenciar</button>
+                ${rodape}
             </div>
         </article>`;
 }
@@ -191,43 +191,19 @@ async function cancelarInscricao(btn) {
 // ── Atualização pontual do card (sem re-fetch completo) ────────────────────────
 
 function atualizarCardAposInscricao(eventoId, inscricaoId, usuarioId) {
-    const card   = document.querySelector(`.event-card[data-evento-id="${eventoId}"]`);
-    if (!card) return;
-
-    const footer = card.querySelector('.card-footer');
-    const vagasLabel = footer.querySelector('.vagas-label');
-
-    if (vagasLabel) {
-        const atual = parseInt(vagasLabel.textContent) || 0;
-        vagasLabel.textContent = `${Math.max(0, atual - 1)} vagas`;
-        vagasLabel.classList.add('inscrito-label');
-        vagasLabel.textContent = '✓ Inscrito';
-    }
-
-    footer.innerHTML = `
-        <span class="vagas-label inscrito-label">✓ Inscrito</span>
-        <button class="btn-ticket btn-cancelar-inscricao"
-                data-inscricao-id="${inscricaoId}"
-                data-usuario-id="${usuarioId}"
-                data-evento-id="${eventoId}"
-                onclick="cancelarInscricao(this)">
-            Cancelar
-        </button>`;
+    // TAREFA PESSOA 2: Atualizar o estado global para que o filtro não "limpe" a inscrição
+    _inscricoesMap[eventoId] = inscricaoId; 
+    
+    // Agora chama o filtro para redesenhar a tela com os dados novos
+    aplicarFiltros();
 }
 
 function atualizarCardAposCancelamento(eventoId, usuarioId) {
-    const card   = document.querySelector(`.event-card[data-evento-id="${eventoId}"]`);
-    if (!card) return;
-
-    const footer = card.querySelector('.card-footer');
-    footer.innerHTML = `
-        <span class="vagas-label">Vagas disponíveis</span>
-        <button class="btn-ticket btn-inscrever"
-                data-evento-id="${eventoId}"
-                data-usuario-id="${usuarioId}"
-                onclick="inscrever(this)">
-            Inscrever-se
-        </button>`;
+    // TAREFA PESSOA 2: Remover do mapa global
+    delete _inscricoesMap[eventoId];
+    
+    // Redesenha a tela refletindo que não está mais inscrito
+    aplicarFiltros();
 }
 
 // ── Filtro e busca ─────────────────────────────────────────────────────────────
