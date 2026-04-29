@@ -83,33 +83,30 @@ def inicio():
 
 @app.post("/cadastrar", status_code=201)
 def cadastro(dados: UsuarioCadastro):
-    if not re.match(r"^[A-Za-zÀ-ÿ\s]{3,}$", dados.nome_completo):
-        raise HTTPException(status_code=400, detail="Nome inválido. Use apenas letras e no mínimo 3 caracteres.")
+    # As validações de nome, idade (12-100 anos), CPF, telefone e senha 
+    # já foram feitas automaticamente pelo Pydantic (models.py).
 
-    hoje = date.today()
-    idade = hoje.year - dados.data_nascimento.year - (
-        (hoje.month, hoje.day) < (dados.data_nascimento.month, dados.data_nascimento.day)
-    )
-    if idade < 12:
-        raise HTTPException(status_code=400, detail="A idade mínima para cadastro é de 12 anos.")
-    if idade > 120:
-        raise HTTPException(status_code=400, detail="Data de nascimento inválida.")
-
-    if not validar_cpf(dados.cpf):
-        raise HTTPException(status_code=400, detail="CPF inválido.")
-
+    # Verifica se email ou CPF já existem no banco
     if procura_usuario_por_email(dados.email):
         raise HTTPException(status_code=409, detail="Este email já está cadastrado no sistema.")
 
     if procura_usuario_por_cpf(dados.cpf):
         raise HTTPException(status_code=409, detail="Este CPF já está cadastrado no sistema.")
 
+    # Criptografia da senha
     senha_cripto = bcrypt.hashpw(
         dados.password.encode('utf-8'), bcrypt.gensalt()
     ).decode('utf-8')
 
-    cadastra_usuario(dados.nome_completo, dados.data_nascimento, dados.email,
-                     dados.cpf, dados.telefone, senha_cripto)
+    cadastra_usuario(
+        dados.nome_completo, 
+        dados.data_nascimento, 
+        dados.email,
+        dados.cpf, 
+        dados.telefone, 
+        senha_cripto
+    )
+    
     return {"mensagem": "Usuário cadastrado com sucesso!"}
 
 
@@ -135,22 +132,21 @@ def login(dados: UsuarioLogin):
 
 @app.put("/atualizar-perfil/{usuario_id}")
 def atualizar_perfil(usuario_id: int, dados: UsuarioAtualizacao):
-    if not re.match(r"^[A-Za-zÀ-ÿ\s]{3,}$", dados.nome_completo):
-        raise HTTPException(status_code=400, detail="Nome inválido.")
+    # Validações de nome, email, telefone e idade automáticas via models.py.
 
-    hoje = date.today()
-    idade = hoje.year - dados.data_nascimento.year - (
-        (hoje.month, hoje.day) < (dados.data_nascimento.month, dados.data_nascimento.day)
-    )
-    if idade < 12 or idade > 120:
-        raise HTTPException(status_code=400, detail="Data de nascimento fora do intervalo permitido.")
-
+    # Verifica se o e-mail novo já pertence a OUTRO usuário
     usuario_existente = procura_usuario_por_email(dados.email)
     if usuario_existente and usuario_existente['id'] != usuario_id:
         raise HTTPException(status_code=409, detail="Este e-mail já está sendo usado por outra conta.")
 
-    atualiza_usuario_db(usuario_id, dados.nome_completo, dados.email,
-                        dados.telefone, dados.data_nascimento)
+    atualiza_usuario_db(
+        usuario_id, 
+        dados.nome_completo, 
+        dados.email,
+        dados.telefone, 
+        dados.data_nascimento
+    )
+    
     return {"mensagem": "Dados atualizados com sucesso!"}
 
 
@@ -168,13 +164,20 @@ def deletar_conta(usuario_id: int):
 def criar_evento(dados: EventoCriar):
     _exige_organizador(dados.usuario_id)
 
+    # A models.py garante que nome, local e categoria não sejam vazios e capacidade > 0.
     if dados.data_hora <= datetime.now():
         raise HTTPException(status_code=400, detail="A data do evento deve ser futura.")
 
     evento_id = cria_evento_db(
-        dados.usuario_id, dados.nome, dados.descricao,
-        dados.data_hora, dados.local, dados.capacidade, dados.categoria,
+        dados.usuario_id, 
+        dados.nome, 
+        dados.descricao,
+        dados.data_hora, 
+        dados.local, 
+        dados.capacidade, 
+        dados.categoria,
     )
+    
     return {"mensagem": "Evento criado com sucesso!", "evento_id": evento_id}
 
 
@@ -202,9 +205,15 @@ def editar_evento(evento_id: int, dados: EventoAtualizar):
         raise HTTPException(status_code=400, detail="A data do evento deve ser futura.")
 
     atualiza_evento_db(
-        evento_id, dados.nome, dados.descricao,
-        dados.data_hora, dados.local, dados.capacidade, dados.categoria,
+        evento_id, 
+        dados.nome, 
+        dados.descricao,
+        dados.data_hora, 
+        dados.local, 
+        dados.capacidade, 
+        dados.categoria,
     )
+    
     return {"mensagem": "Evento atualizado com sucesso!"}
 
 

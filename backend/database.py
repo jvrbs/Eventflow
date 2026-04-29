@@ -63,6 +63,8 @@ def procura_usuario_por_id(usuario_id: int):
 
 def cadastra_usuario(nome_completo, data_nascimento, email, cpf, telefone, senha_cripto):
     try:
+        if not (10 <= len(telefone) <= 11):
+            raise ValueError("O telefone deve conter entre 10 e 11 dígitos.")
         conn = get_connection()
         cursor = conn.cursor()
         query = """

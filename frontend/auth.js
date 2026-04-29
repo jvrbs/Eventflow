@@ -7,7 +7,7 @@ function limparNumero(valor) {
     return valor.replace(/\D/g, '');
 }
 
-// TAREFA PESSOA 2: Função de idade com correção de fuso horário
+// Função de idade com correção de fuso horário
 function calcularIdade(dataNasc) {
     if (!dataNasc) return -1;
     const hoje = new Date();
@@ -25,7 +25,7 @@ function calcularIdade(dataNasc) {
     return idade;
 }
 
-// Validação de CPF (Regra de negócio do backend)
+// Validação de CPF (Alinhado com models.py)
 function validarCPF(cpf) {
     const strCPF = limparNumero(cpf);
     if (strCPF.length !== 11 || /^(\d)\1{10}$/.test(strCPF)) return false;
@@ -40,12 +40,23 @@ function validarCPF(cpf) {
     return true;
 }
 
+// Validação de Senha Forte (Alinhado com a Regex da models.py)
+function validarSenhaForte(senha) {
+    const minLength = senha.length >= 8;
+    const hasUpper = /[A-Z]/.test(senha);
+    const hasLower = /[a-z]/.test(senha);
+    const hasNumber = /\d/.test(senha);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    
+    return minLength && hasUpper && hasLower && hasNumber && hasSpecial;
+}
+
 // --- 2. ELEMENTOS DO DOM ---
 
 const formularioCadastro = document.getElementById('formCadastro');
 const formularioLogin = document.getElementById('formLogin');
 const msgGeral = document.getElementById('mensagem');    // Span para erros gerais
-const msgSenha = document.getElementById('mensagem2');   // Span para senha fraca
+const msgSenha = document.getElementById('mensagem2');   // Span para senha fraca (se existir no HTML)
 const msgLogin = document.getElementById('mensagem3');   // Span para erro de login
 
 // --- 3. LÓGICA DE CADASTRO ---
@@ -57,22 +68,24 @@ if (formularioCadastro) {
         const nome = document.getElementById('nomeCompletocadastro')?.value.trim() || '';
         const email = document.getElementById('emailCadastro')?.value.trim() || '';
         const data_nascimento = document.getElementById('dataNascimentoCadastro')?.value || '';
-        const cpf = limparNumero(document.getElementById('cpfCadastro')?.value || '');
-        const telefone = limparNumero(document.getElementById('telefoneCadastro')?.value || '');
+        const cpfRaw = document.getElementById('cpfCadastro')?.value || '';
+        const telefoneRaw = document.getElementById('telefoneCadastro')?.value || '';
         const senha = document.getElementById('passwordCadastro')?.value || '';
         const confirma = document.getElementById('confirmarSenhaCadastro')?.value || '';
 
         // Limpa mensagens anteriores
-        if (msgGeral) msgGeral.style.display = 'none';
-        if (msgSenha) msgSenha.style.display = 'none';
+        if (msgGeral) { msgGeral.style.display = 'none'; msgGeral.textContent = ''; }
+        if (msgSenha) { msgSenha.style.display = 'none'; msgSenha.textContent = ''; }
 
-        // Validações de Frontend
-        if (nome.length < 3) {
-            msgGeral.textContent = "Nome inválido (mínimo 3 caracteres).";
+        // 1. Validação de Nome (Mínimo 2 palavras e apenas letras)
+        const partesNome = nome.split(/\s+/).filter(p => p.length > 0);
+        if (partesNome.length < 2) {
+            msgGeral.textContent = "Informe seu nome completo (pelo menos duas palavras).";
             msgGeral.style.display = 'block';
             return;
         }
 
+        // 2. Validação de Idade (12 a 100 anos)
         const idade = calcularIdade(data_nascimento);
         if (idade < 12 || idade > 100) {
             msgGeral.textContent = "Idade permitida: entre 12 e 100 anos.";
@@ -80,19 +93,43 @@ if (formularioCadastro) {
             return;
         }
 
-        if (!validarCPF(cpf)) {
+        // 3. Validação de CPF
+        const cpfLimpo = limparNumero(cpfRaw);
+        if (!validarCPF(cpfLimpo)) {
             msgGeral.textContent = "CPF inválido.";
             msgGeral.style.display = 'block';
             return;
         }
 
+        // 4. Validação de Telefone (10 ou 11 dígitos)
+        const telefoneLimpo = limparNumero(telefoneRaw);
+        if (telefoneLimpo.length < 10 || telefoneLimpo.length > 11) {
+            msgGeral.textContent = "Telefone inválido (deve ter 10 ou 11 dígitos com DDD).";
+            msgGeral.style.display = 'block';
+            return;
+        }
+
+        // 5. Validação de Senha Forte
+        if (!validarSenhaForte(senha)) {
+            const erroSenha = "A senha deve ter 8+ caracteres, incluir maiúscula, minúscula, número e caractere especial.";
+            if (msgSenha) {
+                msgSenha.textContent = erroSenha;
+                msgSenha.style.display = 'block';
+            } else {
+                msgGeral.textContent = erroSenha;
+                msgGeral.style.display = 'block';
+            }
+            return;
+        }
+
+        // 6. Confirmação de Senha
         if (senha !== confirma) {
             msgGeral.textContent = "As senhas não coincidem.";
             msgGeral.style.display = 'block';
             return;
         }
 
-        // Envio para API FastAPI
+        // Envio para API
         try {
             const resposta = await fetch(`${API_URL}/cadastrar`, {
                 method: "POST",
@@ -101,8 +138,8 @@ if (formularioCadastro) {
                     nome_completo: nome,
                     data_nascimento: data_nascimento,
                     email: email,
-                    cpf: cpf,
-                    telefone: telefone,
+                    cpf: cpfLimpo,       // Envia apenas dígitos
+                    telefone: telefoneLimpo, // Envia apenas dígitos
                     password: senha
                 })
             });
@@ -110,12 +147,14 @@ if (formularioCadastro) {
             const resultado = await resposta.json();
 
             if (!resposta.ok) {
-                msgGeral.textContent = resultado.detail || "Erro ao cadastrar.";
+                // Trata erros vindos do Pydantic ou do Banco
+                msgGeral.textContent = Array.isArray(resultado.detail) 
+                    ? resultado.detail[0].msg 
+                    : (resultado.detail || "Erro ao cadastrar.");
                 msgGeral.style.display = 'block';
                 return;
             }
 
-            // Sucesso: Redireciona para login
             window.location.href = "../login/login.html";
 
         } catch (erro) {
@@ -125,7 +164,7 @@ if (formularioCadastro) {
     });
 }
 
-// --- 4. LÓGICA DE LOGIN (INTEGRADO COM PERFIL) ---
+// --- 4. LÓGICA DE LOGIN ---
 
 if (formularioLogin) {
     formularioLogin.addEventListener('submit', async function(event) {
@@ -135,7 +174,7 @@ if (formularioLogin) {
         const senha = document.getElementById('passwordLogin').value.trim();
         const botao = formularioLogin.querySelector('button');
 
-        if (msgLogin) msgLogin.style.display = 'none';
+        if (msgLogin) { msgLogin.style.display = 'none'; msgLogin.textContent = ''; }
 
         if (!email || !senha) {
             msgLogin.textContent = "Preencha todos os campos.";
@@ -161,10 +200,7 @@ if (formularioLogin) {
                 return;
             }
 
-            // REGRAS DO PROMPT: Salvar usuário e definir fluxo por perfil
             localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
-
-            // Redirecionamento unificado (a home tratará o que exibir via JS)
             window.location.href = "../home/home.html";
 
         } catch (erro) {
@@ -184,5 +220,5 @@ if (formularioLogin) {
 function logout() {
     localStorage.clear();
     sessionStorage.clear();
-    window.location.href = "./login/login.html";
+    window.location.href = "../login/login.html";
 }
