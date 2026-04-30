@@ -81,31 +81,48 @@ def inicio():
 
 # ── Usuário ────────────────────────────────────────────────────────────────────
 
+# backend/main.py
+
 @app.post("/cadastrar", status_code=201)
 def cadastro(dados: UsuarioCadastro):
-    # As validações de nome, idade (12-100 anos), CPF, telefone e senha 
-    # já foram feitas automaticamente pelo Pydantic (models.py).
-
-    # Verifica se email ou CPF já existem no banco
+    # 1. Verifica se email já existe
     if procura_usuario_por_email(dados.email):
-        raise HTTPException(status_code=409, detail="Este email já está cadastrado no sistema.")
+        raise HTTPException(
+            status_code=409, 
+            detail="Este e-mail já está cadastrado no sistema."
+        )
 
+    # 2. Verifica se CPF já existe
     if procura_usuario_por_cpf(dados.cpf):
-        raise HTTPException(status_code=409, detail="Este CPF já está cadastrado no sistema.")
+        raise HTTPException(
+            status_code=409, 
+            detail="Este CPF já está cadastrado no sistema."
+        )
+
+    # 3. Validação extra de CPF (caso o Pydantic não tenha validado o dígito verificador)
+    if not validar_cpf(dados.cpf):
+        raise HTTPException(
+            status_code=400, 
+            detail="O CPF fornecido é inválido."
+        )
 
     # Criptografia da senha
     senha_cripto = bcrypt.hashpw(
         dados.password.encode('utf-8'), bcrypt.gensalt()
     ).decode('utf-8')
 
-    cadastra_usuario(
-        dados.nome_completo, 
-        dados.data_nascimento, 
-        dados.email,
-        dados.cpf, 
-        dados.telefone, 
-        senha_cripto
-    )
+    try:
+        cadastra_usuario(
+            dados.nome_completo, 
+            dados.data_nascimento, 
+            dados.email,
+            dados.cpf, 
+            dados.telefone, 
+            senha_cripto
+        )
+    except Exception as e:
+        # Fallback para erros inesperados de banco de dados
+        raise HTTPException(status_code=500, detail="Erro interno ao salvar o usuário.")
     
     return {"mensagem": "Usuário cadastrado com sucesso!"}
 

@@ -144,6 +144,7 @@ class UsuarioAtualizacao(BaseModel):
             raise ValueError("Idade mínima é 12 anos.")
         if idade > 100:
             raise ValueError("Idade máxima é 100 anos.")
+        return v
 
 
 # ── Evento ─────────────────────────────────────────────────────────────────────
