@@ -116,9 +116,17 @@ formInfo.addEventListener('submit', async function(event) {
         const resultado = await resposta.json();
 
         if (!resposta.ok) {
-            exibirMensagem(resultado.detail || "Erro ao salvar.", "erro");
-            return;
+        let mensagem = "Erro ao salvar.";
+        if (resultado.detail) {
+            if (Array.isArray(resultado.detail)) {
+                mensagem = resultado.detail.map(err => err.msg).join(" | ");
+            } else {
+                mensagem = resultado.detail;
+            }
         }
+        exibirMensagem(mensagem, "erro");
+        return;
+    }
 
         exibirMensagem("Informações atualizadas!", "sucesso");
         localStorage.setItem('usuario', JSON.stringify({
