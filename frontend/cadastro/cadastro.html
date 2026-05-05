@@ -57,12 +57,18 @@
 
                     <div class="input-group">
                         <label for="passwordCadastro">Senha</label>
-                        <input type="password" name="password" id="passwordCadastro" required>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" id="passwordCadastro" required>
+                            <button type="button" class="toggle-password-btn" onclick="toggleSenha('passwordCadastro', this)" aria-label="Mostrar senha">👁️</button>
+                        </div>
                     </div>
 
                     <div class="input-group">
                         <label for="confirmarSenhaCadastro">Confirmar senha</label>
-                        <input type="password" name="confirm_password" id="confirmarSenhaCadastro" required>
+                        <div class="password-wrapper">
+                            <input type="password" name="confirm_password" id="confirmarSenhaCadastro" required>
+                            <button type="button" class="toggle-password-btn" onclick="toggleSenha('confirmarSenhaCadastro', this)" aria-label="Mostrar senha">👁️</button>
+                        </div>
                     </div>
 
                     <div class="messages-container">

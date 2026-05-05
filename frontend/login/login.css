@@ -88,6 +88,37 @@ body {
     box-shadow: 0 0 8px rgba(75, 0, 130, 0.2);
 }
 
+/* ESTILOS BOTÃO MOSTRAR SENHA (Feat 1) */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.login-form .password-wrapper input {
+    padding-right: 40px; /* Evita que o texto se sobreponha ao botão */
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
 .btn-login {
     background-color: var(--primary-purple);
     color: var(--white);

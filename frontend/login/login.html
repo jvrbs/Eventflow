@@ -38,7 +38,10 @@
 
                     <div class="input-group">
                         <label for="passwordLogin">Senha</label>
-                        <input type="password" name="password" id="passwordLogin" placeholder="Senha" required>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" id="passwordLogin" placeholder="Senha" required>
+                            <button type="button" class="toggle-password-btn" onclick="toggleSenha('passwordLogin', this)" aria-label="Mostrar senha">👁️</button>
+                        </div>
                     </div>
 
                     <p id="mensagem3" style="color: red; display: none;">Insira os campos: Senha ou E-mail</p>

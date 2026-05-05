@@ -91,6 +91,37 @@ body {
 
 .cadastro-form input:focus { border-color: var(--primary-purple); }
 
+/* ESTILOS BOTÃO MOSTRAR SENHA (Feat 1) */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.cadastro-form .password-wrapper input {
+    padding-right: 40px; /* Evita que o texto se sobreponha ao botão */
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
 .btn-login {
     background-color: var(--primary-purple);
     color: var(--white);
@@ -119,6 +150,32 @@ body {
 }
 
 .return-icon { width: 18px; filter: invert(13%) sepia(90%) saturate(5000%) hue-rotate(260deg); }
+
+/* VALIDAÇÃO EM TEMPO REAL (Feat 2) */
+.cadastro-form input.field-error {
+    border-color: red !important;
+}
+
+.cadastro-form input.field-error:focus {
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
+}
+
+.cadastro-form input.field-ok {
+    border-color: green !important;
+}
+
+.cadastro-form input.field-ok:focus {
+    box-shadow: 0 0 8px rgba(0, 128, 0, 0.2);
+}
+
+.field-msg {
+    display: block;
+    color: red;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 4px;
+    line-height: 1.2;
+}
 
 /* RESPONSIVIDADE CADASTRO */
 @media (max-width: 600px) {

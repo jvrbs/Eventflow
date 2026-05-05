@@ -2,6 +2,24 @@
 
 const API_URL = "http://localhost:8000";
 
+// Função para alternar visibilidade da senha (Feat 1)
+function toggleSenha(inputId, btnEl) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        btnEl.textContent = '🙈';
+        btnEl.setAttribute('aria-label', 'Ocultar senha');
+    } else {
+        input.type = 'password';
+        btnEl.textContent = '👁️';
+        btnEl.setAttribute('aria-label', 'Mostrar senha');
+    }
+}
+// Expõe globalmente para os botões do HTML
+window.toggleSenha = toggleSenha;
+
 // Remove caracteres não numéricos (útil para CPF e Telefone)
 function limparNumero(valor) {
     return valor.replace(/\D/g, '');
@@ -61,19 +79,177 @@ function exibirErro(elemento, texto) {
     }
 }
 
+// --- FUNÇÃO DE ESTADO DO CAMPO (Feat 2) ---
+function setFieldState(inputEl, isValid, mensagem) {
+    if (!inputEl) return;
+
+    const container = inputEl.closest('.input-group');
+    if (!container) return;
+
+    if (isValid) {
+        inputEl.classList.remove('field-error');
+        inputEl.classList.add('field-ok');
+    } else {
+        inputEl.classList.remove('field-ok');
+        inputEl.classList.add('field-error');
+    }
+
+    // Procura ou cria o elemento de mensagem de erro inline dentro do .input-group
+    let msgEl = container.querySelector('.field-msg');
+    if (!isValid && mensagem) {
+        if (!msgEl) {
+            msgEl = document.createElement('span');
+            msgEl.className = 'field-msg';
+            container.appendChild(msgEl);
+        }
+        msgEl.textContent = mensagem;
+        msgEl.style.display = 'block';
+    } else {
+        if (msgEl) {
+            msgEl.textContent = '';
+            msgEl.style.display = 'none';
+        }
+    }
+}
+
+// Validadores Individuais (Feat 2)
+function validarNomeField() {
+    const el = document.getElementById('nomeCompletocadastro');
+    if (!el) return true;
+    const val = el.value.trim();
+    const isValid = val.split(/\s+/).filter(p => p.length > 0).length >= 2;
+    setFieldState(el, isValid, isValid ? '' : "Informe seu nome completo (pelo menos duas palavras).");
+    return isValid;
+}
+
+function validarDataNascField() {
+    const el = document.getElementById('dataNascimentoCadastro');
+    if (!el) return true;
+    const val = el.value;
+    if (!val) {
+        setFieldState(el, false, "Data de nascimento é obrigatória.");
+        return false;
+    }
+    const idade = calcularIdade(val);
+    const isValid = idade >= 12 && idade <= 100;
+    setFieldState(el, isValid, isValid ? '' : "Idade permitida: entre 12 e 100 anos.");
+    return isValid;
+}
+
+function validarEmailField() {
+    const el = document.getElementById('emailCadastro');
+    if (!el) return true;
+    const val = el.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(val);
+    setFieldState(el, isValid, isValid ? '' : "Informe um e-mail válido.");
+    return isValid;
+}
+
+function validarCpfField() {
+    const el = document.getElementById('cpfCadastro');
+    if (!el) return true;
+    const val = el.value;
+    const cleanCpf = limparNumero(val);
+    const isValid = validarCPF(cleanCpf);
+    setFieldState(el, isValid, isValid ? '' : "CPF inválido.");
+    return isValid;
+}
+
+function validarTelefoneField() {
+    const el = document.getElementById('telefoneCadastro');
+    if (!el) return true;
+    const clean = limparNumero(el.value);
+    const isValid = clean.length >= 10 && clean.length <= 11;
+    setFieldState(el, isValid, isValid ? '' : "Telefone inválido (mínimo 10 dígitos com DDD).");
+    return isValid;
+}
+
+function validarSenhaField() {
+    const el = document.getElementById('passwordCadastro');
+    if (!el) return true;
+    const val = el.value;
+    const isValid = validarSenhaForte(val);
+    setFieldState(el, isValid, isValid ? '' : "A senha deve ter 8+ caracteres, incluir maiúscula, minúscula, número e caractere especial.");
+    return isValid;
+}
+
+function validarConfirmaSenhaField() {
+    const el = document.getElementById('confirmarSenhaCadastro');
+    const senhaEl = document.getElementById('passwordCadastro');
+    if (!el || !senhaEl) return true;
+    const val = el.value;
+    const senhaVal = senhaEl.value;
+    const isValid = val === senhaVal && val.length > 0;
+    setFieldState(el, isValid, isValid ? '' : "As senhas não coincidem.");
+    return isValid;
+}
+
 // --- 2. ELEMENTOS DO DOM ---
 
 const formularioCadastro = document.getElementById('formCadastro');
 const formularioLogin = document.getElementById('formLogin');
-const msgGeral = document.getElementById('mensagem');    
+const msgGeral = document.getElementById('mensagem');     
 const msgSenha = document.getElementById('mensagem2');   
 const msgLogin = document.getElementById('mensagem3');   
 
 // --- 3. LÓGICA DE CADASTRO ---
 
 if (formularioCadastro) {
+    // Lista de mapeamento para as validações em tempo real (Feat 2)
+    const fieldsToValidate = [
+        { id: 'nomeCompletocadastro', validator: validarNomeField },
+        { id: 'dataNascimentoCadastro', validator: validarDataNascField },
+        { id: 'emailCadastro', validator: validarEmailField },
+        { id: 'cpfCadastro', validator: validarCpfField },
+        { id: 'telefoneCadastro', validator: validarTelefoneField },
+        { id: 'passwordCadastro', validator: () => {
+            const v1 = validarSenhaField();
+            const conf = document.getElementById('confirmarSenhaCadastro');
+            if (conf && conf.value.length > 0) {
+                validarConfirmaSenhaField();
+            }
+            return v1;
+        }},
+        { id: 'confirmarSenhaCadastro', validator: validarConfirmaSenhaField }
+    ];
+
+    // Registra os listeners de 'input' e 'blur' para cada campo de cadastro (Feat 2)
+    fieldsToValidate.forEach(({ id, validator }) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', validator);
+            el.addEventListener('blur', validator);
+        }
+    });
+
     formularioCadastro.addEventListener('submit', async function(event) {
         event.preventDefault();
+
+        // Executa todas as validações no submit para atualizar os estados visuais (Feat 2)
+        let formValido = true;
+        let primeiroInvalido = null;
+
+        fieldsToValidate.forEach(({ id, validator }) => {
+            const valido = validator();
+            if (!valido) {
+                formValido = false;
+                const el = document.getElementById(id);
+                if (!primeiroInvalido && el) {
+                    primeiroInvalido = el;
+                }
+            }
+        });
+
+        // Aproveita os estados calculados: se houver classe field-error ou formulário inválido, bloqueia
+        const hasError = formularioCadastro.querySelector('.field-error');
+        if (!formValido || hasError) {
+            if (primeiroInvalido) {
+                primeiroInvalido.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                primeiroInvalido.focus();
+            }
+            return;
+        }
 
         const nome = document.getElementById('nomeCompletocadastro')?.value.trim() || '';
         const email = document.getElementById('emailCadastro')?.value.trim() || '';
@@ -81,44 +257,13 @@ if (formularioCadastro) {
         const cpfRaw = document.getElementById('cpfCadastro')?.value || '';
         const telefoneRaw = document.getElementById('telefoneCadastro')?.value || '';
         const senha = document.getElementById('passwordCadastro')?.value || '';
-        const confirma = document.getElementById('confirmarSenhaCadastro')?.value || '';
 
-        // Limpa mensagens anteriores
+        // Limpa mensagens gerais anteriores se houverem
         if (msgGeral) { msgGeral.style.display = 'none'; msgGeral.textContent = ''; }
         if (msgSenha) { msgSenha.style.display = 'none'; msgSenha.textContent = ''; }
 
-        // 1. Validação de Nome
-        if (nome.split(/\s+/).filter(p => p.length > 0).length < 2) {
-            exibirErro(msgGeral, "Informe seu nome completo (pelo menos duas palavras).");
-            return;
-        }
-
-        // 2. Validação de Idade (12 a 100 anos)
-        const idade = calcularIdade(data_nascimento);
-        if (idade < 12 || idade > 100) {
-            exibirErro(msgGeral, "Idade permitida: entre 12 e 100 anos.");
-            return;
-        }
-
-        // 3. Validação de CPF
         const cpfLimpo = limparNumero(cpfRaw);
-        if (!validarCPF(cpfLimpo)) {
-            exibirErro(msgGeral, "CPF inválido.");
-            return;
-        }
-
-        // 4. Validação de Senha Forte
-        if (!validarSenhaForte(senha)) {
-            const erroSenha = "A senha deve ter 8+ caracteres, incluir maiúscula, minúscula, número e caractere especial.";
-            exibirErro(msgSenha || msgGeral, erroSenha);
-            return;
-        }
-
-        // 5. Confirmação de Senha
-        if (senha !== confirma) {
-            exibirErro(msgGeral, "As senhas não coincidem.");
-            return;
-        }
+        const telefoneLimpo = limparNumero(telefoneRaw);
 
         // --- ENVIO PARA API ---
         try {
@@ -130,7 +275,7 @@ if (formularioCadastro) {
                     data_nascimento: data_nascimento,
                     email: email,
                     cpf: cpfLimpo,       
-                    telefone: limparNumero(telefoneRaw), 
+                    telefone: telefoneLimpo, 
                     password: senha
                 })
             });
