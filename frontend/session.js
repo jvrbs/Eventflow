@@ -7,7 +7,16 @@ function getUsuarioLogado(redirectSePath = '../login/login.html') {
         return null;
     }
 
-    return JSON.parse(raw);
+    const usuario = JSON.parse(raw);
+    const duasHoras = 2 * 60 * 60 * 1000; // 7.200.000 ms
+
+    // Verifica se "logado_em" não existe (sessões antigas) ou se já expirou
+    if (!usuario.logado_em || (Date.now() - usuario.logado_em) > duasHoras) {
+        logout(redirectSePath);
+        return null;
+    }
+
+    return usuario;
 }
 
 // Clear session and redirect

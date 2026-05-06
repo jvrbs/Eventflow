@@ -122,6 +122,7 @@ function validarNomeField() {
     return isValid;
 }
 
+// Validador de Data de Nascimento
 function validarDataNascField() {
     const el = document.getElementById('dataNascimentoCadastro');
     if (!el) return true;
@@ -136,6 +137,7 @@ function validarDataNascField() {
     return isValid;
 }
 
+// Validador de Email
 function validarEmailField() {
     const el = document.getElementById('emailCadastro');
     if (!el) return true;
@@ -146,6 +148,7 @@ function validarEmailField() {
     return isValid;
 }
 
+// Validador de CPF
 function validarCpfField() {
     const el = document.getElementById('cpfCadastro');
     if (!el) return true;
@@ -156,6 +159,7 @@ function validarCpfField() {
     return isValid;
 }
 
+// Validador de Telefone
 function validarTelefoneField() {
     const el = document.getElementById('telefoneCadastro');
     if (!el) return true;
@@ -165,6 +169,7 @@ function validarTelefoneField() {
     return isValid;
 }
 
+// Validador de Senha
 function validarSenhaField() {
     const el = document.getElementById('passwordCadastro');
     if (!el) return true;
@@ -174,6 +179,7 @@ function validarSenhaField() {
     return isValid;
 }
 
+// Validador de Confirmação de Senha
 function validarConfirmaSenhaField() {
     const el = document.getElementById('confirmarSenhaCadastro');
     const senhaEl = document.getElementById('passwordCadastro');
@@ -343,8 +349,11 @@ if (formularioLogin) {
                 return;
             }
 
-            // Salva dados e redireciona
-            localStorage.setItem('usuario', JSON.stringify(resultado.usuario));
+            // MODIFICADO: Salva os dados com o timestamp do login atual e redireciona
+            localStorage.setItem('usuario', JSON.stringify({
+                ...resultado.usuario,
+                logado_em: Date.now()
+            }));
             window.location.href = "../home/home.html";
 
         } catch (erro) {
