@@ -4,22 +4,125 @@ document.addEventListener('DOMContentLoaded', function() {
     const usuario = getUsuarioLogado('../../login/login.html');
 
     // 2. Captura os elementos com Optional Chaining para evitar erros se não existirem
-    const avatarImg = document.querySelector('.avatar-image');
     const boasVindas = document.querySelector('.avatar-topo h2');
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarError = document.getElementById('avatarError');
+
+    // ── Lógica Dinâmica de Renderização do Avatar ────────────────────────────
+    function renderizarAvatar(userObj) {
+        const avatarImg = document.querySelector('.avatar-image');
+        if (!avatarImg) return;
+
+        if (userObj && userObj.avatar_url) {
+            // Garante o fallback de host se a url for relativa
+            const urlCompleta = userObj.avatar_url.startsWith('http') 
+                ? userObj.avatar_url 
+                : `http://localhost:8000${userObj.avatar_url}`;
+            
+            avatarImg.innerHTML = `<img src="${urlCompleta}" alt="Foto de Perfil">`;
+        } else if (userObj && userObj.nome_completo) {
+            const nomeParaExibir = userObj.nome_completo.trim();
+            const primeiraLetra = nomeParaExibir.charAt(0).toUpperCase();
+            avatarImg.textContent = primeiraLetra;
+        } else {
+            avatarImg.textContent = "?";
+        }
+    }
 
     // 3. TAREFA PESSOA 2: Blindagem contra Null/Undefined (Null Pointer Protection)
     if (usuario && usuario.nome_completo) {
         const nomeParaExibir = usuario.nome_completo.trim();
-        const primeiraLetra = nomeParaExibir.charAt(0).toUpperCase();
         const primeiroNome = nomeParaExibir.split(' ')[0];
 
-        if (avatarImg) avatarImg.textContent = primeiraLetra;
         if (boasVindas) boasVindas.textContent = `Olá, ${primeiroNome}!`;
+        renderizarAvatar(usuario);
     } else {
         // Fallback: Caso o nome venha nulo, a página não quebra
-        if (avatarImg) avatarImg.textContent = "?";
+        renderizarAvatar(null);
         if (boasVindas) boasVindas.textContent = "Olá, Usuário!";
         console.warn("Dados do usuário incompletos no LocalStorage.");
+    }
+
+    // ── Lógica de Upload do Avatar ───────────────────────────────────────────
+    if (avatarInput && usuario && usuario.id) {
+        avatarInput.addEventListener('change', async function(e) {
+            const arquivo = e.target.files[0];
+            if (!arquivo) return;
+
+            // Esconder qualquer erro persistente anterior
+            if (avatarError) {
+                avatarError.style.display = 'none';
+                avatarError.textContent = '';
+            }
+
+            // 1. Validação de formato no frontend
+            const formatosValidos = ['image/jpeg', 'image/png'];
+            if (!formatosValidos.includes(arquivo.type)) {
+                exibirErro("Apenas imagens JPEG ou PNG são aceitas.");
+                avatarInput.value = '';
+                return;
+            }
+
+            // 2. Validação de tamanho no frontend (2MB)
+            const limiteTamanho = 2 * 1024 * 1024;
+            if (arquivo.size > limiteTamanho) {
+                exibirErro("A imagem não pode exceder o tamanho de 2MB.");
+                avatarInput.value = '';
+                return;
+            }
+
+            // Criação do FormData para payload multipart/form-data
+            const formData = new FormData();
+            formData.append('file', arquivo);
+
+            try {
+                // Feedback visual de carregamento
+                const avatarImgDiv = document.querySelector('.avatar-image');
+                if (avatarImgDiv) avatarImgDiv.style.opacity = '0.4';
+                avatarInput.disabled = true;
+
+                const resposta = await fetch(`http://localhost:8000/usuarios/${usuario.id}/avatar`, {
+                    method: 'PATCH',
+                    body: formData
+                });
+
+                const resultado = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error(resultado.detail || "Não foi possível enviar a imagem.");
+                }
+
+                // Upload bem sucedido: Atualiza o localStorage do usuário com a nova URL
+                usuario.avatar_url = resultado.avatar_url;
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+
+                // Re-renderiza o avatar imediatamente sem refresh de tela
+                renderizarAvatar(usuario);
+
+            } catch (erro) {
+                console.error("Erro no envio:", erro);
+                exibirErro(erro.message || "Erro de conexão com o servidor.");
+            } finally {
+                // Remove feedback visual e reseta estados
+                const avatarImgDiv = document.querySelector('.avatar-image');
+                if (avatarImgDiv) avatarImgDiv.style.opacity = '1';
+                avatarInput.disabled = false;
+                avatarInput.value = ''; // Permite subir o mesmo arquivo se o usuário quiser tentar de novo
+            }
+        });
+    }
+
+    function exibirErro(mensagem) {
+        if (avatarError) {
+            avatarError.textContent = mensagem;
+            avatarError.style.display = 'block';
+            
+            // Oculta o erro automaticamente após 6 segundos
+            setTimeout(() => {
+                avatarError.style.display = 'none';
+                avatarError.textContent = '';
+            }, 6000);
+        }
     }
 });
 

@@ -32,6 +32,13 @@
 }
 
 /* 4. AVATAR E TOPO */
+.avatar-container {
+    position: relative;
+    width: 108px; /* 100px do círculo + 8px de bordas */
+    height: 108px;
+    margin: 0 auto 15px;
+}
+
 .avatar-image {
     width: 100px;
     height: 100px;
@@ -43,8 +50,54 @@
     justify-content: center;
     font-size: 2.5rem;
     font-weight: bold;
-    margin: 0 auto 15px;
     border: 4px solid var(--bg-light);
+    overflow: hidden; /* Mantém a imagem recortada no círculo */
+    transition: opacity 0.3s ease;
+}
+
+.avatar-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante o preenchimento sem distorção */
+    border-radius: 50%;
+}
+
+/* Botão de câmera flutuante */
+.btn-upload-avatar {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 32px;
+    height: 32px;
+    background-color: var(--secondary-orange);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--white);
+    transition: all 0.2s ease;
+}
+
+.btn-upload-avatar:hover {
+    background-color: #e05e00;
+    transform: scale(1.1);
+}
+
+.btn-upload-avatar svg {
+    display: block;
+}
+
+/* Feedback de erro amigável */
+.avatar-error {
+    color: #d93025;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    display: none; /* Ativado dinamicamente via JS */
 }
 
 .avatar-topo h2 {

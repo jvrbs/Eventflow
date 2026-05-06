@@ -111,3 +111,5 @@ Desktop.ini
 .idea/
 .vscode/
 
+# Uploaded avatars and media
+backend/uploads/

@@ -116,6 +116,19 @@ def deleta_usuario_db(usuario_id):
         cursor.close()
         conn.close()
 
+def salva_avatar_db(usuario_id: int, avatar_url: str):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        query = "UPDATE usuario SET avatar_url = %s WHERE id = %s"
+        cursor.execute(query, (avatar_url, usuario_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        print(f"Erro ao salvar avatar no banco: {err}")
+        raise
+
 
 def verifica_senha_usuario(senha, senha_hash):
     try:
