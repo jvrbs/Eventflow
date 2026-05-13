@@ -4,13 +4,31 @@ const inputEmail = document.getElementById('email');
 const inputTelefone = document.getElementById('telefone');
 const inputDataNascimento = document.getElementById('dataNascimento');
 const inputIdade = document.getElementById('idade');
-const msgValidacao = document.getElementById('mensagemValidacao');
+const msgValidacaoGeral = document.getElementById('mensagemValidacao');
 const formInfo = document.getElementById('formInfo');
 
 const IDADE_MINIMA = 12;
-const IDADE_MAXIMA = 120;
+const IDADE_MAXIMA = 100; // Atualizado para 100 para espelhar o cadastro
 
-// Máscara de Telefone
+// --- FUNÇÕES AUXILIARES ---
+
+function limparNumero(valor) {
+    return valor.replace(/\D/g, '');
+}
+
+function calcularIdade(dataNasc) {
+    if (!dataNasc) return -1;
+    const hoje = new Date();
+    const nascimento = new Date(dataNasc);
+    nascimento.setMinutes(nascimento.getMinutes() + nascimento.getTimezoneOffset());
+
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mes = hoje.getMonth() - nascimento.getMonth();
+    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) idade--;
+    return idade;
+}
+
+// Máscara de Telefone (Mantida)
 inputTelefone.addEventListener('input', (e) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 11) value = value.slice(0, 11);
@@ -21,37 +39,86 @@ inputTelefone.addEventListener('input', (e) => {
     e.target.value = value;
 });
 
-function exibirMensagem(texto, tipo) {
-    if (!msgValidacao) return;
-    msgValidacao.textContent = texto;
-    msgValidacao.className = "mensagem-validacao " + (tipo === 'erro' ? 'msg-erro' : 'msg-sucesso');
-    msgValidacao.style.display = 'block';
-}
+// --- SISTEMA DE VALIDAÇÃO VISUAL (Igual ao auth.js) ---
 
-// TAREFA PESSOA 2: Padronização do cálculo de idade
-function calcularIdade(dataNascimento) {
-    if (!dataNascimento) return 0;
-    const hoje = new Date();
-    const nascimento = new Date(dataNascimento);
-    nascimento.setMinutes(nascimento.getMinutes() + nascimento.getTimezoneOffset());
+function setFieldState(inputEl, isValid, mensagem) {
+    if (!inputEl) return;
+    const container = inputEl.closest('.form-group');
+    if (!container) return;
 
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mes = hoje.getMonth() - nascimento.getMonth();
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-        idade--;
+    if (isValid) {
+        inputEl.classList.remove('field-error');
+        inputEl.classList.add('field-ok');
+    } else {
+        inputEl.classList.remove('field-ok');
+        inputEl.classList.add('field-error');
     }
-    return idade;
+
+    let msgEl = container.querySelector('.field-msg');
+    if (!isValid && mensagem) {
+        if (!msgEl) {
+            msgEl = document.createElement('span');
+            msgEl.className = 'field-msg';
+            container.appendChild(msgEl);
+        }
+        msgEl.textContent = mensagem;
+        msgEl.style.display = 'block';
+    } else if (msgEl) {
+        msgEl.style.display = 'none';
+    }
 }
 
-// TAREFA PESSOA 2: Blindagem contra nulos ao preencher dados
+// --- VALIDADORES INDIVIDUAIS ---
+
+const validators = {
+    nome: (el) => {
+        const isValid = el.value.trim().split(/\s+/).filter(p => p.length > 0).length >= 2;
+        setFieldState(el, isValid, isValid ? '' : "Informe seu nome completo (mínimo 2 palavras).");
+        return isValid;
+    },
+    email: (el) => {
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+        setFieldState(el, isValid, isValid ? '' : "E-mail inválido.");
+        return isValid;
+    },
+    telefone: (el) => {
+        const clean = limparNumero(el.value);
+        const isValid = clean.length >= 10 && clean.length <= 11;
+        setFieldState(el, isValid, isValid ? '' : "Telefone inválido (10 ou 11 dígitos).");
+        return isValid;
+    },
+    dataNascimento: (el) => {
+        const idade = calcularIdade(el.value);
+        const isValid = idade >= IDADE_MINIMA && idade <= IDADE_MAXIMA;
+        setFieldState(el, isValid, isValid ? '' : `Idade permitida: ${IDADE_MINIMA} a ${IDADE_MAXIMA} anos.`);
+        if (isValid) inputIdade.value = idade;
+        return isValid;
+    }
+};
+
+// --- LISTENERS EM TEMPO REAL ---
+
+[inputNome, inputEmail, inputTelefone, inputDataNascimento].forEach(el => {
+    if (el) {
+        el.addEventListener('input', () => validators[el.id](el));
+        el.addEventListener('blur', () => validators[el.id](el));
+    }
+});
+
+function exibirMensagemGeral(texto, tipo) {
+    if (!msgValidacaoGeral) return;
+    msgValidacaoGeral.textContent = texto;
+    msgValidacaoGeral.className = "mensagem-validacao " + (tipo === 'erro' ? 'msg-erro' : 'msg-sucesso');
+    msgValidacaoGeral.style.display = 'block';
+}
+
+// --- CARREGAMENTO DE DADOS ---
+
 function preencherDadosUsuario() {
-    const usuario = typeof getUsuarioLogado === 'function' 
-        ? getUsuarioLogado('../../login/login.html') 
-        : JSON.parse(localStorage.getItem('usuario'));
-    
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
     if (!usuario) return;
 
-    inputNome.value = usuario.nome_completo || usuario.nome || "";
+    inputNome.value = usuario.nome_completo || "";
     inputEmail.value = usuario.email || "";
     if (usuario.telefone) {
         inputTelefone.value = usuario.telefone;
@@ -66,37 +133,32 @@ function preencherDadosUsuario() {
 
 preencherDadosUsuario();
 
-inputDataNascimento.addEventListener('change', () => {
-    inputIdade.value = calcularIdade(inputDataNascimento.value);
-});
+// --- SUBMIT ---
 
 formInfo.addEventListener('submit', async function(event) {
     event.preventDefault(); 
     
-    const idade = calcularIdade(inputDataNascimento.value);
-    const email = inputEmail.value.trim();
-    const nome = inputNome.value.trim();
-    const telefone = inputTelefone.value.replace(/\D/g, ''); 
+    let formValido = true;
+    let primeiroInvalido = null;
 
-    if (nome.length < 3) {
-        exibirMensagem("O nome deve ter no mínimo 3 caracteres.", "erro");
-        return;
-    }
+    // Executa todos os validadores
+    [inputNome, inputEmail, inputTelefone, inputDataNascimento].forEach(el => {
+        if (!validators[el.id](el)) {
+            formValido = false;
+            if (!primeiroInvalido) primeiroInvalido = el;
+        }
+    });
 
-    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regexEmail.test(email)) {
-        exibirMensagem("Por favor, insira um e-mail válido.", "erro");
-        return;
-    }
-
-    if (idade < IDADE_MINIMA || idade > IDADE_MAXIMA) {
-        exibirMensagem(`Idade permitida: entre ${IDADE_MINIMA} e ${IDADE_MAXIMA} anos.`, "erro");
+    if (!formValido) {
+        primeiroInvalido.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        primeiroInvalido.focus();
         return;
     }
 
     const btnSalvar = formInfo.querySelector('.btn-salvar');
     btnSalvar.disabled = true;
     btnSalvar.textContent = "Salvando...";
+    if (msgValidacaoGeral) msgValidacaoGeral.style.display = 'none';
 
     try {
         const usuarioLogado = JSON.parse(localStorage.getItem('usuario'));
@@ -106,9 +168,9 @@ formInfo.addEventListener('submit', async function(event) {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                nome_completo: nome,
-                email: email,
-                telefone: telefone,
+                nome_completo: inputNome.value.trim(),
+                email: inputEmail.value.trim(),
+                telefone: limparNumero(inputTelefone.value),
                 data_nascimento: inputDataNascimento.value
             })
         });
@@ -116,28 +178,26 @@ formInfo.addEventListener('submit', async function(event) {
         const resultado = await resposta.json();
 
         if (!resposta.ok) {
-        let mensagem = "Erro ao salvar.";
-        if (resultado.detail) {
+            let mensagem = resultado.detail;
             if (Array.isArray(resultado.detail)) {
                 mensagem = resultado.detail.map(err => err.msg).join(" | ");
-            } else {
-                mensagem = resultado.detail;
             }
+            exibirMensagemGeral(mensagem, "erro");
+            return;
         }
-        exibirMensagem(mensagem, "erro");
-        return;
-    }
 
-        exibirMensagem("Informações atualizadas!", "sucesso");
+        exibirMensagemGeral("Informações atualizadas!", "sucesso");
+        
+        // Atualiza storage local
         localStorage.setItem('usuario', JSON.stringify({
             ...usuarioLogado,
-            nome_completo: nome,
-            email,
-            telefone,
+            nome_completo: inputNome.value.trim(),
+            email: inputEmail.value.trim(),
+            telefone: limparNumero(inputTelefone.value),
             data_nascimento: inputDataNascimento.value
         }));
     } catch (erro) {
-        exibirMensagem(erro.message || "Erro de conexão.", "erro");
+        exibirMensagemGeral(erro.message || "Erro de conexão.", "erro");
     } finally {
         btnSalvar.disabled = false;
         btnSalvar.textContent = "Salvar Alterações";

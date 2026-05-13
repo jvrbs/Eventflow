@@ -143,3 +143,21 @@
         padding-top: 100px;
     }
 }
+
+/* --- Estilos de Validação Visual --- */
+
+.form-group input.field-error { 
+    border-color: red !important; 
+}
+
+.form-group input.field-ok { 
+    border-color: green !important; 
+}
+
+.field-msg { 
+    display: block; 
+    color: red; 
+    font-size: 0.75rem; 
+    font-weight: 500; 
+    margin-top: 4px; 
+}

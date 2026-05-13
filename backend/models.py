@@ -70,8 +70,8 @@ class UsuarioCadastro(BaseModel):
 
         if idade < 12:
             raise ValueError("Idade mínima é 12 anos.")
-        if idade > 100:
-            raise ValueError("Idade máxima é 100 anos.")
+        if idade > 120:
+            raise ValueError("Idade máxima é 120 anos.")
 
         return v
     

@@ -365,3 +365,25 @@ def listar_inscricoes_usuario(usuario_id: int):
     if not procura_usuario_por_id(usuario_id):
         raise HTTPException(status_code=404, detail="Usuário não encontrado.")
     return lista_inscricoes_por_usuario(usuario_id)
+
+
+# backend/main.py
+
+@app.delete("/usuarios/{usuario_id}/avatar")
+def remover_avatar(usuario_id: int):
+    # 1. Verifica se o usuário existe
+    usuario = procura_usuario_por_id(usuario_id)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado.")
+
+    # 2. Deleta o arquivo físico se existir
+    if usuario.get("avatar_url"):
+        # Remove o leading slash para o path relativo correto
+        caminho_relativo = usuario["avatar_url"].lstrip("/") 
+        if os.path.exists(caminho_relativo):
+            os.remove(caminho_relativo)
+
+    # 3. Limpa o campo no banco de dados
+    salva_avatar_db(usuario_id, None)
+
+    return {"mensagem": "Avatar removido com sucesso."}
