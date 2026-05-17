@@ -46,6 +46,22 @@ function calcularVagasRestantes(evento, inscricoesAtivas) {
     return Math.max(0, evento.capacidade - inscricoesAtivas);
 }
 
+// ── Nome do usuário no header ──────────────────────────────────────────────────
+
+function exibirNomeNoHeader(usuario) {
+    const span = document.getElementById('headerNomeUsuario');
+    if (!span || !usuario || !usuario.nome_completo) return;
+    const primeiroNome = usuario.nome_completo.trim().split(' ')[0];
+
+    const badges = {
+        'organizador':  `<span style="color:#FF6B00;font-weight:800;margin-right:6px;">ORG</span>`,
+        'participante': `<span style="color:#FF6B00;font-weight:800;margin-right:6px;">USER</span>`,
+    };
+
+    const badge = badges[usuario.perfil] ?? '';
+    span.innerHTML = badge + `Olá, ${primeiroNome}`;
+}
+
 // ── Renderização ───────────────────────────────────────────────────────────────
 
 function renderizarCard(evento, inscricaoId, usuarioId, perfil) {
@@ -191,18 +207,12 @@ async function cancelarInscricao(btn) {
 // ── Atualização pontual do card (sem re-fetch completo) ────────────────────────
 
 function atualizarCardAposInscricao(eventoId, inscricaoId, usuarioId) {
-    // TAREFA PESSOA 2: Atualizar o estado global para que o filtro não "limpe" a inscrição
-    _inscricoesMap[eventoId] = inscricaoId; 
-    
-    // Agora chama o filtro para redesenhar a tela com os dados novos
+    _inscricoesMap[eventoId] = inscricaoId;
     aplicarFiltros();
 }
 
 function atualizarCardAposCancelamento(eventoId, usuarioId) {
-    // TAREFA PESSOA 2: Remover do mapa global
     delete _inscricoesMap[eventoId];
-    
-    // Redesenha a tela refletindo que não está mais inscrito
     aplicarFiltros();
 }
 
@@ -244,13 +254,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     _usuarioId    = usuario.id;
     _perfil       = usuario.perfil;
 
+    // Exibe o nome do usuário no header (funciona em todas as páginas que importam home.js)
+    exibirNomeNoHeader(usuario);
+
     // Botão "Criar Evento" só para organizadores
     if (_perfil === 'organizador') {
         const criarBtn = document.getElementById('btnCriarEvento');
         if (criarBtn) criarBtn.style.display = 'inline-flex';
     }
 
-    // Buscar eventos e inscrições em paralelo
+    // Buscar eventos e inscrições em paralelo (só relevante na home.html)
+    const eventsGrid = document.querySelector('.events-grid');
+    if (!eventsGrid) return;
+
     try {
         const [resEventos, resInscricoes] = await Promise.all([
             fetch(`${API_URL}/eventos`),
@@ -266,15 +282,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             inscricoes = await resInscricoes.json();
         }
 
-        // Mapa: evento_id → inscricao_id
         _inscricoesMap = {};
         inscricoes.forEach(i => { _inscricoesMap[i.evento_id] = i.inscricao_id; });
 
-        // Injetar vagas_restantes (backend não retorna, calculamos via capacidade)
-        // (backend pode retornar conta_inscritos via JOIN futuramente)
         _todosEventos.forEach(ev => {
             if (ev.vagas_restantes === undefined) {
-                ev.vagas_restantes = ev.capacidade; // fallback sem contagem real
+                ev.vagas_restantes = ev.capacidade;
             }
         });
 
@@ -315,10 +328,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// ── Organizador: abrir gerenciar evento (stub) ─────────────────────────────────
+// ── Organizador: abrir gerenciar evento ───────────────────────────────────────
 
 function abrirGerenciarEvento(eventoId) {
-    // Redireciona para página de gestão (a ser desenvolvida)
     window.location.href = `gerenciar-evento/gerenciar.html?id=${eventoId}`;
 }
 
