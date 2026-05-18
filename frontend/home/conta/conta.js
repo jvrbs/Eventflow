@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const boasVindas = document.querySelector('.avatar-topo h2');
     const avatarInput = document.getElementById('avatarInput');
     const avatarError = document.getElementById('avatarError');
+    const btnRemoverAvatar = document.getElementById('btnRemoverAvatar');
 
     // ── Lógica Dinâmica de Renderização do Avatar ────────────────────────────
     function renderizarAvatar(userObj) {
@@ -20,16 +21,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 : `http://localhost:8000${userObj.avatar_url}`;
             
             avatarImg.innerHTML = `<img src="${urlCompleta}" alt="Foto de Perfil">`;
+
+            // Exibe o botão de remoção pois há avatar
+            if (btnRemoverAvatar) btnRemoverAvatar.style.display = 'inline-block';
         } else if (userObj && userObj.nome_completo) {
             const nomeParaExibir = userObj.nome_completo.trim();
             const primeiraLetra = nomeParaExibir.charAt(0).toUpperCase();
             avatarImg.textContent = primeiraLetra;
+
+            // Oculta o botão de remoção pois não há avatar
+            if (btnRemoverAvatar) btnRemoverAvatar.style.display = 'none';
         } else {
             avatarImg.textContent = "?";
+
+            // Oculta o botão de remoção no estado de fallback
+            if (btnRemoverAvatar) btnRemoverAvatar.style.display = 'none';
         }
     }
 
-    // 3. TAREFA PESSOA 2: Blindagem contra Null/Undefined (Null Pointer Protection)
+    // 3. Blindagem contra Null/Undefined (Null Pointer Protection)
     if (usuario && usuario.nome_completo) {
         const nomeParaExibir = usuario.nome_completo.trim();
         const primeiroNome = nomeParaExibir.split(' ')[0];
@@ -112,6 +122,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ── Lógica de Remoção do Avatar ──────────────────────────────────────────
+    if (btnRemoverAvatar && usuario && usuario.id) {
+        btnRemoverAvatar.addEventListener('click', async function() {
+            // Esconde erros anteriores
+            if (avatarError) {
+                avatarError.style.display = 'none';
+                avatarError.textContent = '';
+            }
+
+            // Feedback visual durante a requisição
+            btnRemoverAvatar.disabled = true;
+            btnRemoverAvatar.textContent = 'Removendo...';
+
+            try {
+                const avatarImgDiv = document.querySelector('.avatar-image');
+                if (avatarImgDiv) avatarImgDiv.style.opacity = '0.4';
+
+                const resposta = await fetch(`http://localhost:8000/usuarios/${usuario.id}/avatar`, {
+                    method: 'DELETE'
+                });
+
+                const resultado = await resposta.json();
+
+                if (!resposta.ok) {
+                    throw new Error(resultado.detail || "Não foi possível remover a imagem.");
+                }
+
+                // Remove avatar_url do objeto e atualiza o localStorage
+                usuario.avatar_url = null;
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+
+                // Re-renderiza sem avatar (mostra inicial do nome ou "?")
+                renderizarAvatar(usuario);
+
+            } catch (erro) {
+                console.error("Erro ao remover avatar:", erro);
+                exibirErro(erro.message || "Erro de conexão com o servidor.");
+
+                // Restaura o botão em caso de erro
+                btnRemoverAvatar.disabled = false;
+                btnRemoverAvatar.textContent = 'Remover foto';
+            } finally {
+                const avatarImgDiv = document.querySelector('.avatar-image');
+                if (avatarImgDiv) avatarImgDiv.style.opacity = '1';
+            }
+        });
+    }
+
     function exibirErro(mensagem) {
         if (avatarError) {
             avatarError.textContent = mensagem;
@@ -148,7 +206,7 @@ window.onclick = function(event) {
     }
 }
 
-// Evento do botão de confirmação final (Preparado para o CRUD futuro)
+// Evento do botão de confirmação final
 document.getElementById('btnFinalExcluir')?.addEventListener('click', async () => {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuario'));
     if (!usuarioLogado || !usuarioLogado.id) {

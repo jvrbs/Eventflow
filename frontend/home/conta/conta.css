@@ -10,7 +10,7 @@
 
 /* 2. ESTRUTURA PRINCIPAL */
 .conta-wrapper {
-    padding-top: 150px; /* Espaço para o header fixo não cobrir o card */
+    padding-top: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,7 +24,7 @@
     width: 90%;
     max-width: 450px;
     padding: 40px;
-    border-radius: 40px; /* Estilo arredondado do seu design */
+    border-radius: 40px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     text-align: center;
     border: 2px solid #eee;
@@ -34,7 +34,7 @@
 /* 4. AVATAR E TOPO */
 .avatar-container {
     position: relative;
-    width: 108px; /* 100px do círculo + 8px de bordas */
+    width: 108px;
     height: 108px;
     margin: 0 auto 15px;
 }
@@ -51,14 +51,14 @@
     font-size: 2.5rem;
     font-weight: bold;
     border: 4px solid var(--bg-light);
-    overflow: hidden; /* Mantém a imagem recortada no círculo */
+    overflow: hidden;
     transition: opacity 0.3s ease;
 }
 
 .avatar-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Garante o preenchimento sem distorção */
+    object-fit: cover;
     border-radius: 50%;
 }
 
@@ -90,6 +90,36 @@
     display: block;
 }
 
+/* Botão de remoção do avatar */
+.btn-remover-avatar {
+    display: none; /* Controlado via JS */
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    margin-bottom: 8px;
+}
+
+.btn-remover-avatar:hover {
+    color: #d93025;
+    background-color: #fce8e6;
+    text-decoration: none;
+}
+
+.btn-remover-avatar:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+    background-color: transparent;
+    text-decoration: none;
+}
+
 /* Feedback de erro amigável */
 .avatar-error {
     color: #d93025;
@@ -97,7 +127,7 @@
     margin-top: 5px;
     margin-bottom: 10px;
     font-weight: 500;
-    display: none; /* Ativado dinamicamente via JS */
+    display: none;
 }
 
 .avatar-topo h2 {
@@ -133,19 +163,19 @@
 
 /* Estilo específico para o botão de exclusão */
 .btn-opcao.btn-excluir {
-    border-color: #d93025; /* Vermelho de alerta */
+    border-color: #d93025;
     color: #d93025;
 }
 
 .btn-opcao.btn-excluir:hover {
-    background-color: #fce8e6; /* Fundo vermelho bem clarinho no hover */
+    background-color: #fce8e6;
     border-color: #b21f14;
     color: #b21f14;
 }
 
 /* Estilo específico para o botão de Sair */
 .btn-opcao.logout {
-    border-color: #dc3545; /* Vermelho para alerta */
+    border-color: #dc3545;
     color: #dc3545;
 }
 
@@ -156,7 +186,7 @@
 
 /* Container que escurece o fundo */
 .modal-container {
-    display: none; /* Escondido por padrão */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -208,20 +238,17 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===========================================
-   6. RESPONSIVIDADE (MEDIA QUERIES) 
-   =========================================== */
-
+/* 6. RESPONSIVIDADE */
 @media (max-width: 600px) {
     .conta-wrapper {
-        padding-top: 100px; /* Header fica menor no mobile */
+        padding-top: 100px;
         padding-left: 15px;
         padding-right: 15px;
     }
 
     .menu-conta-card {
         padding: 30px 20px;
-        border-radius: 30px; /* Reduz um pouco o arredondamento */
+        border-radius: 30px;
     }
 
     .avatar-image {
@@ -239,4 +266,4 @@
         padding: 15px;
         font-size: 0.9rem;
     }
-}                                                                                                                                                           
+}
