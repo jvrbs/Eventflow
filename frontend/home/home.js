@@ -49,6 +49,11 @@ function calcularVagasRestantes(evento, inscricoesAtivas) {
 // ── Nome do usuário no header ──────────────────────────────────────────────────
 
 function exibirNomeNoHeader(usuario) {
+    // Mostrar link "Meus Eventos" só para participantes
+    const linkMeusEventos = document.getElementById('linkMeusEventos');
+    if (linkMeusEventos && _perfil === 'participante') {
+        linkMeusEventos.style.display = 'inline';
+    }
     const span = document.getElementById('headerNomeUsuario');
     if (!span || !usuario || !usuario.nome_completo) return;
     const primeiroNome = usuario.nome_completo.trim().split(' ')[0];
